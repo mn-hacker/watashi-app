@@ -1,0 +1,1 @@
+vless://5-vless-ws-uuid@pa1.khastehnabashi.com:10005?type=ws&path=%2Fvless-ws-path&host=&security=none#5-vless-ws

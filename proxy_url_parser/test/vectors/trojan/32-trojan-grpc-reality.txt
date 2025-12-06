@@ -1,0 +1,1 @@
+trojan://32-trojan-grpc-reality-password@pa1.khastehnabashi.com:10032?type=grpc&serviceName=trojan-grpc-reality-servicename&authority=&mode=multi&security=reality&pbk=RARYHt-zT1oosWf86xXGGR7qk5ERNMburkrGm7lfajs&fp=randomized&sni=www.speedtest.net&sid=245e&spx=%2Flogin#32-trojan-grpc-reality

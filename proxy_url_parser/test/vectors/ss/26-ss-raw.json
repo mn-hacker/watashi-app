@@ -1,0 +1,48 @@
+{
+  "outbounds": [
+    {
+      "mux": {
+        "concurrency": -1,
+        "enabled": false
+      },
+      "protocol": "shadowsocks",
+      "settings": {
+        "servers": [
+          {
+            "address": "pa1.khastehnabashi.com",
+            "level": 8,
+            "method": "2022-blake3-chacha20-poly1305",
+            "ota": false,
+            "password": "woLDnSnCuMOywrwOwqV/WBXDscK8G8OSw7glbMOYfS7CmhnCiMKeCQFxwrzCiEXDuQ==",
+            "port": 10026
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
+        }
+      },
+      "tag": "proxy"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "tag": "direct"
+    },
+    {
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      },
+      "tag": "block"
+    }
+  ]
+}

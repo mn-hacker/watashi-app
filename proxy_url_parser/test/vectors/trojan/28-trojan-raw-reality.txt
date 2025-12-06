@@ -1,0 +1,1 @@
+trojan://28-trojan-raw-reality-password@pa1.khastehnabashi.com:10028?type=tcp&security=reality&pbk=4cbNTxmayYA5ElxZcDCTzJ1vXYE4AUXDwsRWwYutmDI&fp=randomized&sni=www.speedtest.net&sid=7e85a4&spx=%2Flogin#28-trojan-raw-reality

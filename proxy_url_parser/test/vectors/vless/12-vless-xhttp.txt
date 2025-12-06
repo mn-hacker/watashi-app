@@ -1,0 +1,1 @@
+vless://12-vless-xhttp-uuid@pa1.khastehnabashi.com:10012?type=xhttp&path=%2Fvless-xhttp-path&host=&mode=auto&security=none#12-vless-xhttp
