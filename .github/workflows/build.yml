@@ -46,12 +46,12 @@ jobs:
         run: |
           cd proxy_core/scripts
           chmod +x build_android.sh
-          ./build_android.sh || true
+          ./build_android.sh
 
-          echo "=== Listing build output ==="
-          ls -la .android_build/ || echo "No .android_build directory"
-          ls -la .android_build/arm64/ || echo "No arm64 directory"
-          ls -la .android_build/amd64/ || echo "No amd64 directory"
+          echo "=== Build output (from scripts dir) ==="
+          ls -la .android_build/
+          ls -la .android_build/arm64/
+          ls -la .android_build/amd64/
 
       - name: Copy Native Libraries to jniLibs
         run: |
@@ -61,42 +61,14 @@ jobs:
           mkdir -p proxy_core/android/src/main/jniLibs/x86
           mkdir -p proxy_core/android/src/main/jniLibs/x86_64
 
-          # Check what was built
-          echo "=== Checking build outputs ==="
-          find proxy_core/scripts/.android_build -name "*.so" 2>/dev/null || echo "No .so files found"
+          # Copy from correct path (scripts/.android_build NOT .android_build)
+          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/arm64-v8a/
+          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/armeabi-v7a/
+          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86_64/
+          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86/
 
-          # Copy ARM64 library if exists
-          if [ -f "proxy_core/scripts/.android_build/arm64/libproxy_core.so" ]; then
-            cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/arm64-v8a/
-            echo "Copied ARM64 to arm64-v8a"
-          fi
-
-          # Copy AMD64 library for x86_64
-          if [ -f "proxy_core/scripts/.android_build/amd64/libproxy_core.so" ]; then
-            cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86_64/
-            echo "Copied AMD64 to x86_64"
-          fi
-
-          # For armeabi-v7a, use ARM64 as fallback (or skip if not available)
-          if [ -f "proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so" ]; then
-            cp proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so proxy_core/android/src/main/jniLibs/armeabi-v7a/
-            echo "Copied to armeabi-v7a from arm64"
-          fi
-
-          # For x86, use amd64 as fallback
-          if [ -f "proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so" ]; then
-            cp proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86/
-            echo "Copied to x86 from x86_64"
-          fi
-
-          echo "=== Final jniLibs contents ==="
-          find proxy_core/android/src/main/jniLibs -name "*.so" 2>/dev/null || echo "No .so files in jniLibs"
-
-          # Fail if no libraries were copied
-          if [ ! -f "proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so" ] && [ ! -f "proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so" ]; then
-            echo "ERROR: No native libraries were successfully built!"
-            exit 1
-          fi
+          echo "=== jniLibs contents ==="
+          find proxy_core/android/src/main/jniLibs -name "*.so"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -104,27 +76,19 @@ jobs:
           flutter-version: "3.38.2"
           channel: "stable"
 
-      - name: Get main dependencies
-        run: flutter pub get
-
-      - name: Get proxy_core dependencies
+      - name: Get dependencies
         run: |
-          cd proxy_core
           flutter pub get
-
-      - name: Get proxy_url_parser dependencies
-        run: |
-          cd proxy_url_parser
-          flutter pub get
+          cd proxy_core && flutter pub get
+          cd ../proxy_url_parser && flutter pub get
 
       - name: Generate localization
         run: flutter gen-l10n
 
-      - name: Build Split APKs (per ABI)
-        run: flutter build apk --release --split-per-abi
-
-      - name: Build Universal APK
-        run: flutter build apk --release
+      - name: Build APKs
+        run: |
+          flutter build apk --release --split-per-abi
+          flutter build apk --release
 
       - name: Rename APK files
         run: |
@@ -139,8 +103,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: watashi-app-apks
-          path: |
-            build/app/outputs/flutter-apk/watashi-*.apk
+          path: build/app/outputs/flutter-apk/watashi-*.apk
           if-no-files-found: error
 
       - name: Create Release
