@@ -1,129 +1,37 @@
-# Segment
+# Watashi App
 
-Segment is an SDK-like app designed to showcase the power and functionality of the `proxy_core` plugin. Its primary purpose is to serve as a reference implementation and demonstration of how to integrate and utilize the `proxy_core` plugin for advanced proxy and connection management features in Flutter applications.
+Watashi App is an SDK-like app designed to showcase the power and functionality of the `proxy_core` plugin. Its primary purpose is to serve as a reference implementation and demonstration of how to integrate and utilize the `proxy_core` plugin for advanced proxy and connection management features in Flutter applications.
 
----
+## About proxy_core
 
-An app for freedom of internet
+`proxy_core` is a powerful Flutter plugin that provides:
 
-## Getting Started 🚀
-First run the following command to generate the necessary files:
+- Support for multiple proxy protocols (SS, Trojan, Xray-based)
+- VPN mode functionality
+- Cross-platform compatibility (Android, iOS, Windows, macOS, Linux)
+- Easy configuration through URL parsing
 
-1. Run `./pre_run_clean.sh`
-2. Run `flutter pub run build_runner build`
-3. Run `flutter gen-l10n`
+## Features
 
-Run the following commands to run the app:
+### Core Features
+- **Proxy Support:** Connect via various proxy protocols
+- **VPN Mode:** Full device-level traffic tunneling
+- **Multi-platform Support:** Android, iOS, Windows, macOS, Linux
+- **Easy Configuration:** Import configs via URL or manual setup
 
-```sh
-# Development
-$ flutter run main.dart
-```
+### UI Features
+- Dark/Light Theme Support
+- Multi-language (English, Persian, Russian)
+- Connection status monitoring
+- Server ping testing
+- Log viewing
 
-## Working with Translations 🌐
+## Getting Started
 
-This project relies on [flutter_localizations](#links) and
-follows
-the [official internationalization guide for Flutter](#links).
-
-### Adding Strings
-
-1. To add a new localizable string, open the `app_en.arb` file
-   at `lib/l10n/arb/app_en.arb`.
-
-```arb
-{
-    "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    }
-}
-```
-
-2. Then add a new key/value and description and run `flutter gen-l10n`
-
-```arb
-{
-    "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    },
-    "helloWorld": "Hello World",
-    "@helloWorld": {
-        "description": "Hello World Text"
-    }
-}
-```
-3. Use the new string
-
-```dart
-@override
-Widget build(BuildContext context) {
-  final l10n = context.l10n;
-  return Text(l10n.helloWorld);
-}
-```
-
-### Adding Supported Locales
-
-Update the `CFBundleLocalizations` array in the `Info.plist`
-at `ios/Runner/Info.plist` to include the new locale.
-
-```xml
-<!--...-->
-<array>
-   <key>CFBundleLocalizations</key>
-   <string>en</string>
-   <string>es</string>
-</array><!--...-->
-```
-
-### Adding Translations
-
-1. For each supported locale, add a new ARB file in `lib/l10n/arb`.
-
-```
-├── l10n
-│   ├── arb
-│   │   ├── app_en.arb
-│   │   └── app_es.arb
-```
-
-2. Add the translated strings to each `.arb` file:
-
-`app_en.arb`
-
-```arb
-{
-    "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
-    }
-}
-```
-
-`app_es.arb`
-
-```arb
-{
-    "@@locale": "es",
-    "counterAppBarTitle": "Contador",
-    "@counterAppBarTitle": {
-        "description": "Texto mostrado en la AppBar de la página del contador"
-    }
-}
-```
-
-## Links
-
-[flutter_localizations](https://api.flutter.dev/flutter/flutter_localizations/flutter_localizations-library.html)
-
-[envied](https://pub.dev/packages/envied)
-
-[internationalization](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+1. Clone the repository
+2. Run `flutter pub get`
+3. Run `flutter run`
 
 ## License
-[MIT License](https://github.com/mahsanet/segment_private/blob/main/LICENSE)
+
+[MIT License](LICENSE)

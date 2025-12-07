@@ -19,7 +19,7 @@ void bootstrap({
     WidgetsFlutterBinding.ensureInitialized();
 
     ProxyCore.ins
-        .setIosTunnelInfo("Segment", "com.mahsanet.segment.PacketTunnel");
+        .setIosTunnelInfo("Watashi App", "com.watashi.watashiapp.PacketTunnel");
 
     // TODO: Handle here if the new theme (Dark Mode) added to the app
     SystemChrome.setSystemUIOverlayStyle(AppTheme.lightSystemOverlayStyle);
@@ -74,7 +74,7 @@ void bootstrap({
         appWindow.size = initialSize;
         appWindow.maxSize = initialSize;
         appWindow.alignment = Alignment.center;
-        appWindow.title = "Segment";
+        appWindow.title = "Watashi App";
         appWindow.show();
       });
     }
