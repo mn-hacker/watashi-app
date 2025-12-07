@@ -9,7 +9,9 @@ linter:
 
 analyzer:
   exclude:
-    - '**/app_localizations_**.dart'
-    - '**/app_localizations.dart'
-    - '**.g.dart'
-    - '**.freezed.dart'
+    - "**/app_localizations_**.dart"
+    - "**/app_localizations.dart"
+    - "**.g.dart"
+    - "**.freezed.dart"
+    - "**/proxy_core/**"
+    - "**/proxy_url_parser/**"

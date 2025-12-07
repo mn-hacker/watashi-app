@@ -1,1 +1,0 @@
-trojan://30-trojan-hu-tls-password@pa1.khastehnabashi.com:10030?type=httpupgrade&path=%2Ftrojan-hu-tls-path&host=&security=tls&fp=randomized&alpn=h2%2Chttp%2F1.1&sni=pa1.khastehnabashi.com#30-trojan-hu-tls

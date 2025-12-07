@@ -1,1 +1,0 @@
-vless://7-vless-hu-uuid@pa1.khastehnabashi.com:10007?type=httpupgrade&path=%2Fvless-hu-path&host=&security=none#7-vless-hu

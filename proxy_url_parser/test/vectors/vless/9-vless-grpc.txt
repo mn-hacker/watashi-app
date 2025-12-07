@@ -1,1 +1,0 @@
-vless://9-vless-grpc-uuid@pa1.khastehnabashi.com:10009?type=grpc&serviceName=vless-grpc-servicename&authority=&mode=multi&security=none#9-vless-grpc

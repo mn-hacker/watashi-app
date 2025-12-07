@@ -1,1 +1,0 @@
-vless://6-vless-ws-tls-uuid@pa1.khastehnabashi.com:10006?type=ws&path=%2Fvless-ws-tls-path&host=&security=tls&fp=randomized&alpn=h2%2Chttp%2F1.1&sni=pa1.khastehnabashi.com#6-vless-ws-tls

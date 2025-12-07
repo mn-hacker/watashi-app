@@ -1,1 +1,0 @@
-vless://14-vless-xhttp-reality-uuid@pa1.khastehnabashi.com:10014?type=xhttp&path=%2Fvless-xhttp-reality-path&host=&mode=auto&security=reality&pbk=3dbvtOlu-RnnicTKhGcrbBZMnJ3dSJmBnGlPE_kUmBU&fp=randomized&sni=www.speedtest.net&sid=16c2&spx=%2Flogin#14-vless-xhttp-reality

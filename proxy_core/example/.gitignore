@@ -1,5 +1,0 @@
-*.lock
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies.rej
-.flutter-plugins
-/.flutter-plugins

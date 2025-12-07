@@ -1,1 +1,0 @@
-trojan://33-trojan-xhttp-tls-password@pa1.khastehnabashi.com:10033?type=xhttp&path=%2Ftrojan-xhttp-tls-path&host=&mode=auto&security=tls&fp=randomized&alpn=h2%2Chttp%2F1.1&sni=pa1.khastehnabashi.com#33-trojan-xhttp-tls

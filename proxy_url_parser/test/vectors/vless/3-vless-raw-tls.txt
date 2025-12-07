@@ -1,1 +1,0 @@
-vless://3-vless-raw-tls-uuid@pa1.khastehnabashi.com:10003?type=tcp&security=tls&fp=randomized&alpn=h2%2Chttp%2F1.1&sni=pa1.khastehnabashi.com&flow=xtls-rprx-vision#3-vless-raw-tls
