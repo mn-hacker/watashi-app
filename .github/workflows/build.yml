@@ -1,51 +1,87 @@
 name: Build APK
 
 on:
-    push:
-        tags:
-            - "v*"
-    workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                  submodules: recursive
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-            - name: Setup Java
-              uses: actions/setup-java@v4
-              with:
-                  distribution: "temurin"
-                  java-version: "17"
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
 
-            - name: Setup Flutter
-              uses: subosito/flutter-action@v2
-              with:
-                  flutter-version: "3.38.2"
-                  channel: "stable"
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
-            - name: Get dependencies
-              run: flutter pub get
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
 
-            - name: Generate localization
-              run: flutter gen-l10n
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;27.0.11902837"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/27.0.11902837" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.11902837" >> $GITHUB_ENV
 
-            - name: Build APK
-              run: flutter build apk --release
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
 
-            - name: Upload APK artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: watashi-app-release
-                  path: build/app/outputs/flutter-apk/app-release.apk
+      - name: Build Native Libraries
+        run: |
+          cd proxy_core/scripts
+          chmod +x build_android.sh
+          ./build_android.sh
 
-            - name: Create Release
-              if: startsWith(github.ref, 'refs/tags/')
-              uses: softprops/action-gh-release@v1
-              with:
-                  files: build/app/outputs/flutter-apk/app-release.apk
-                  generate_release_notes: true
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.2"
+          channel: "stable"
+
+      - name: Get main dependencies
+        run: flutter pub get
+
+      - name: Get proxy_core dependencies
+        run: |
+          cd proxy_core
+          flutter pub get
+
+      - name: Get proxy_url_parser dependencies
+        run: |
+          cd proxy_url_parser
+          flutter pub get
+
+      - name: Generate localization
+        run: flutter gen-l10n
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: watashi-app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
