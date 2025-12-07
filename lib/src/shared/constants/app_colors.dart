@@ -33,4 +33,13 @@ final class AppColors {
   // From WindowButtonColors
   static const windowCloseHover = Color(0xFFD32F2F);
   static const windowClosePress = Color(0xFFB71C1C);
+
+  // ========== Dark Theme Colors ==========
+  static const darkBackground = Color(0xFF121212);
+  static const darkSurface = Color(0xFF1E1E1E);
+  static const darkCard = Color(0xFF2C2C2C);
+  static const darkItemsBackground = Color(0xFF3A3A3A);
+  static const darkGreenShadow = Color(0xFF1A3D1F);
+  static const darkActiveTimeLabel = Color(0xFF9CA3AF);
+  static const darkActiveTimeValue = Color(0xFFE5E7EB);
 }

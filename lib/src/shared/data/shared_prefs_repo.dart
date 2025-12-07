@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sharedPrefsRepoProvider =

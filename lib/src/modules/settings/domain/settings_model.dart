@@ -1,5 +1,5 @@
 import 'package:proxy_core/constants/core_names.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
 
 enum ConnectionLoadType {
   normal,

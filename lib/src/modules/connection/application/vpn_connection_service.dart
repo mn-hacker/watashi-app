@@ -1,5 +1,5 @@
-import 'package:segment/src/modules/connection/application/connection_service.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/connection/application/connection_service.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
 
 class VPNConnectionService extends IConnectionService {
   VPNConnectionService(super._ref);

@@ -6,6 +6,8 @@ import 'package:proxy_url_parser/src/proxy_protocols.dart';
 import 'package:proxy_url_parser/src/util/proxy_url_parser_exception.dart';
 import 'package:proxy_url_parser/src/util/proxy_url_parser_logger.dart';
 
+export 'package:proxy_url_parser/src/protocol_config_base.dart';
+
 class ProxyUrlParser {
   static ProtocolConfigBase _parseUrl(String proxyUrl) {
     final cleanedUrl = proxyUrl.trim();
@@ -20,7 +22,7 @@ class ProxyUrlParser {
       throw InvalidUrlFormatException(
         'Failed to parse proxy URL: $e',
         cleanedUrl,
-        StackTrace.current
+        StackTrace.current,
       );
     }
   }
@@ -61,6 +63,6 @@ class ProxyUrlParser {
         return prefixes[prefix]!;
       }
     }
-    throw UnsupportedProxyTypeException(url,StackTrace.current);
+    throw UnsupportedProxyTypeException(url, StackTrace.current);
   }
 }

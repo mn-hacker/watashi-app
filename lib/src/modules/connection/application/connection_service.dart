@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proxy_core/constants/core_names.dart';
 import 'package:proxy_core/gen/bindings/ProxyCoreService.pb.dart';
-import 'package:segment/src/modules/connection/application/proxy_connection_service.dart';
-import 'package:segment/src/modules/connection/application/vpn_connection_service.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
-import 'package:segment/src/modules/connection_config/data/connection_config_repo.dart';
-import 'package:segment/src/modules/core/data/core_repo.dart';
-import 'package:segment/src/modules/settings/data/settings_repo.dart';
+import 'package:watashi/src/modules/connection/application/proxy_connection_service.dart';
+import 'package:watashi/src/modules/connection/application/vpn_connection_service.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
+import 'package:watashi/src/modules/core/data/core_repo.dart';
+import 'package:watashi/src/modules/settings/data/settings_repo.dart';
 
 final connectionServiceProvider = Provider<IConnectionService>((ref) {
   final connectionMode = ref.watch(connectionModeProvider);

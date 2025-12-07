@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/l10n/l10n.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
-import 'package:segment/src/shared/errors/app_exceptions_messages.dart';
-import 'package:segment/src/shared/presentation/snack_bar/app_snack_bar.dart';
+import 'package:watashi/src/l10n/l10n.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/shared/errors/app_exceptions_messages.dart';
+import 'package:watashi/src/shared/presentation/snack_bar/app_snack_bar.dart';
 
 extension AsyncValueUI<T> on AsyncValue<T> {
   String _getErrorMessage(BuildContext context, Object error) {

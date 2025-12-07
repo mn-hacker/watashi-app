@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/modules/connection_config/data/connection_config_repo.dart';
-import 'package:segment/src/modules/connection_config/domain/connection_config_model.dart';
-import 'package:segment/src/modules/connection_config/presentation/widgets/connection_config_input_state.dart';
-import 'package:segment/src/modules/core/data/core_repo.dart';
-import 'package:segment/src/shared/data/shared_prefs_repo.dart';
+import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
+import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
+import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_state.dart';
+import 'package:watashi/src/modules/core/data/core_repo.dart';
+import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
 
 final connectionConfigControllerProvider = NotifierProvider<
     ConnectionConfigInputController,

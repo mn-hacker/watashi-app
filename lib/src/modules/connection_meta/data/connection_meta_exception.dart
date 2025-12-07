@@ -1,4 +1,4 @@
-part of 'package:segment/src/shared/errors/app_exceptions.dart';
+part of 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 // ignore_for_file: must_be_immutable
 class ConnectionMetaException extends AppException {

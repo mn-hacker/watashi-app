@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/modules/connection_meta/data/connection_meta_repo.dart';
-import 'package:segment/src/modules/connection_meta/domain/connection_meta_model.dart';
+import 'package:watashi/src/modules/connection_meta/data/connection_meta_repo.dart';
+import 'package:watashi/src/modules/connection_meta/domain/connection_meta_model.dart';
 
 final connectionMetaControllerProvider =
     StateNotifierProvider<ConnectionMetaController, ConnectionMetaModel?>(

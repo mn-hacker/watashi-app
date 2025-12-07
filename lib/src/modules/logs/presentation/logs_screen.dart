@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/modules/logs/presentation/logs_controller.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_icons.dart';
-import 'package:segment/src/shared/presentation/routing/app_router.dart';
+import 'package:watashi/src/modules/logs/presentation/logs_controller.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_icons.dart';
+import 'package:watashi/src/shared/presentation/routing/app_router.dart';
 
 class LogsScreen extends ConsumerWidget {
   const LogsScreen({super.key});

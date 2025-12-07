@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:segment/gen/assets.gen.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
+import 'package:watashi/gen/assets.gen.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
 
 final class AppIcons {
   AppIcons._();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 extension AppExceptionExtensions on AppException {
   String message(BuildContext context) => switch (this) {

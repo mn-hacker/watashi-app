@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 enum ConnectionMode {
   proxy(1),

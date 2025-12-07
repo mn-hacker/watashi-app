@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:segment/src/modules/logs/presentation/logs_screen.dart';
-import 'package:segment/src/modules/main/presentation/main_screen.dart';
-import 'package:segment/src/shared/errors/error_logger.dart';
-import 'package:segment/src/shared/presentation/routing/shell_route_widget.dart';
+import 'package:watashi/src/modules/logs/presentation/logs_screen.dart';
+import 'package:watashi/src/modules/main/presentation/main_screen.dart';
+import 'package:watashi/src/shared/errors/error_logger.dart';
+import 'package:watashi/src/shared/presentation/routing/shell_route_widget.dart';
 
 part 'app_router.g.dart';
 

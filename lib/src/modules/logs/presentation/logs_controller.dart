@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/modules/core/data/core_repo.dart';
+import 'package:watashi/src/modules/core/data/core_repo.dart';
 
 final logsControllerProvider = AsyncNotifierProvider<LogsController, String>(
   () => LogsController(),

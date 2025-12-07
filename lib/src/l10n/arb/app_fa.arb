@@ -1,0 +1,14 @@
+{
+  "@@locale": "fa",
+  "wordContinue": "ادامه",
+  "noConfigImportedText": "برای اتصال به اینترنت آزاد،\nشما به یک لینک کانفیگ یا کانفیگ JSON نیاز دارید.",
+  "wordImport": "وارد کردن",
+  "wordSubmit": "ثبت",
+  "neverMind": "بیخیال",
+  "checkInternetConnection": "وضعیت اتصال اینترنت خود را بررسی کنید!",
+  "slideToDisconnect": "برای قطع اتصال بکشید",
+  "activeTimeText": "زمان فعال",
+  "addYourConfig": "کانفیگ خود را اضافه کنید",
+  "hasActiveSub_MainScreen": "برای بهبود شرایط اتصال،\nمی‌توانید همیشه کانفیگ دیگری وارد کنید.",
+  "anErrorHappened": "خطایی رخ داد"
+}

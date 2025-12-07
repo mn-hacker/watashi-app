@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_sizes.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_sizes.dart';
 
 class MainRowItem extends StatelessWidget {
   final Widget child;

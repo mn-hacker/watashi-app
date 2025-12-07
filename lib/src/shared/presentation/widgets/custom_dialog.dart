@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
 
 class DialogScaffold extends StatelessWidget {
   final Widget child;

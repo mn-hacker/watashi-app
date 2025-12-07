@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/modules/connection_meta/presentation/connection_meta_controller.dart';
-import 'package:segment/src/modules/main/presentation/main_controller.dart';
-import 'package:segment/src/modules/main/presentation/widgets/main_row_item.dart';
-import 'package:segment/src/shared/constants/app_icons.dart';
-import 'package:segment/src/shared/constants/app_sizes.dart';
-import 'package:segment/src/shared/constants/app_text_styles.dart';
-import 'package:segment/src/shared/utils/async_value_extensions.dart';
+import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_controller.dart';
+import 'package:watashi/src/modules/main/presentation/main_controller.dart';
+import 'package:watashi/src/modules/main/presentation/widgets/main_row_item.dart';
+import 'package:watashi/src/shared/constants/app_icons.dart';
+import 'package:watashi/src/shared/constants/app_sizes.dart';
+import 'package:watashi/src/shared/constants/app_text_styles.dart';
+import 'package:watashi/src/shared/utils/async_value_extensions.dart';
 
 class ConnectionMetaWidget extends ConsumerWidget {
   const ConnectionMetaWidget({super.key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_sizes.dart';
-import 'package:segment/src/shared/constants/app_text_styles.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_sizes.dart';
+import 'package:watashi/src/shared/constants/app_text_styles.dart';
 
 // TODO: Check TextStyles, Colors and Icons
 class AppSnackBar extends SnackBar {

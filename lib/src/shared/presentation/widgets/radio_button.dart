@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_text_styles.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_text_styles.dart';
 
 class RadioOption<T> extends StatelessWidget {
   final String title;

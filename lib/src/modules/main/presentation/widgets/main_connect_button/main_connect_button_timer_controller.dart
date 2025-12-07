@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/shared/data/shared_prefs_repo.dart';
+import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
 
 final connectionTimerProvider = StateNotifierProvider<
     MainConnectButtonTimerController, MainConnectButtonTimerState>((ref) {

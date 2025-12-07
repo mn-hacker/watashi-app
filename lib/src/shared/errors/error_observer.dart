@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/shared/errors/error_logger.dart';
+import 'package:watashi/src/shared/errors/error_logger.dart';
 
 class ErrorObserver extends ProviderObserver {
   ErrorObserver();

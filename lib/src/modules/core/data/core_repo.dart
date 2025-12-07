@@ -6,9 +6,9 @@ import 'package:proxy_core/constants/core_names.dart';
 import 'package:proxy_core/gen/bindings/ProxyCoreService.pb.dart';
 import 'package:proxy_core/models/proxy_core_config.dart';
 import 'package:proxy_core/proxy_core.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
-import 'package:segment/src/modules/connection_config/domain/connection_config_model.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 final coreRepoProvider = Provider<CoreRepo>((ref) => CoreRepo());
 

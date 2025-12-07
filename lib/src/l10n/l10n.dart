@@ -1,10 +1,33 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/l10n/arb/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:watashi/src/l10n/arb/app_localizations.dart';
 
 extension AppLocalizationsX on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
+}
+
+/// Supported locales in the app
+class SupportedLocales {
+  static const en = Locale('en');
+  static const fa = Locale('fa');
+  static const ru = Locale('ru');
+
+  static const all = [en, fa, ru];
+
+  static String getDisplayName(Locale locale) {
+    switch (locale.languageCode) {
+      case 'en':
+        return 'English';
+      case 'fa':
+        return 'فارسی';
+      case 'ru':
+        return 'Русский';
+      default:
+        return locale.languageCode;
+    }
+  }
 }
 
 /// provider used to access the AppLocalizations object for the current locale
@@ -41,6 +64,33 @@ class _LocaleObserver extends WidgetsBindingObserver {
   }
 }
 
-final localeProvider = StateProvider<Locale?>((ref) {
-  return null;
+/// Locale provider with persistence
+final localeProvider = StateNotifierProvider<LocaleNotifier, Locale?>((ref) {
+  return LocaleNotifier();
 });
+
+class LocaleNotifier extends StateNotifier<Locale?> {
+  LocaleNotifier() : super(null) {
+    _loadLocale();
+  }
+
+  static const _key = 'app_locale';
+
+  Future<void> _loadLocale() async {
+    final prefs = await SharedPreferences.getInstance();
+    final languageCode = prefs.getString(_key);
+    if (languageCode != null) {
+      state = Locale(languageCode);
+    }
+  }
+
+  Future<void> setLocale(Locale? locale) async {
+    state = locale;
+    final prefs = await SharedPreferences.getInstance();
+    if (locale != null) {
+      await prefs.setString(_key, locale.languageCode);
+    } else {
+      await prefs.remove(_key);
+    }
+  }
+}

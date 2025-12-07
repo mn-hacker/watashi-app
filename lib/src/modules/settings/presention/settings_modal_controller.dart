@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proxy_core/constants/core_names.dart';
-import 'package:segment/src/modules/connection/domain/connection_mode.dart';
-import 'package:segment/src/modules/settings/data/settings_repo.dart';
-import 'package:segment/src/modules/settings/domain/settings_model.dart';
+import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
+import 'package:watashi/src/modules/settings/data/settings_repo.dart';
+import 'package:watashi/src/modules/settings/domain/settings_model.dart';
 
 final settingsModalControllerProvider =
     NotifierProvider<SettingsModalController, SettingsModel>(

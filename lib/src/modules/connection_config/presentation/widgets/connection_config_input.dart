@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_icons.dart';
-import 'package:segment/src/shared/constants/app_text_styles.dart'; // Import text styles
+import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_icons.dart';
+import 'package:watashi/src/shared/constants/app_text_styles.dart'; // Import text styles
 
 class ConnectionConfigInput extends ConsumerWidget {
   const ConnectionConfigInput({super.key});

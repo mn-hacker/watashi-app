@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/modules/connection_meta/domain/connection_meta_model.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/modules/connection_meta/domain/connection_meta_model.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
 import 'package:socks5_proxy/socks.dart';
 
 final connectionMetaRepoProvider =

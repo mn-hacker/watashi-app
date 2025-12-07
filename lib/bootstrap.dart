@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proxy_core/proxy_core.dart';
-import 'package:segment/src/shared/constants/app_theme.dart';
-import 'package:segment/src/shared/errors/error_logger.dart';
-import 'package:segment/src/shared/errors/error_observer.dart';
+import 'package:watashi/src/shared/constants/app_theme.dart';
+import 'package:watashi/src/shared/errors/error_logger.dart';
+import 'package:watashi/src/shared/errors/error_observer.dart';
 //ignore: depend_on_referenced_packages
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 

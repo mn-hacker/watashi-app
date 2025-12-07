@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/shared/utils/async_value_extensions.dart';
+import 'package:watashi/src/shared/utils/async_value_extensions.dart';
 
 extension UIProviderError<T> on WidgetRef {
   /// only pass [onRetry] if something other than invalidating provider

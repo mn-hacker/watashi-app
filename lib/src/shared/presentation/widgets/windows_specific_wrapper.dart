@@ -1,6 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:segment/src/shared/constants/app_theme.dart';
+import 'package:watashi/src/shared/constants/app_theme.dart';
 
 class WindowsSpecificWrapper extends StatelessWidget {
   final Widget child;

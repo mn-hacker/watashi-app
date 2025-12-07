@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:segment/src/l10n/l10n.dart';
-import 'package:segment/src/modules/connection_config/presentation/widgets/connection_config_input.dart';
-import 'package:segment/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
-import 'package:segment/src/shared/constants/app_colors.dart';
-import 'package:segment/src/shared/constants/app_icons.dart';
-import 'package:segment/src/shared/constants/app_text_styles.dart'; // Import the text styles
-import 'package:segment/src/shared/presentation/widgets/custom_dialog.dart';
+import 'package:watashi/src/l10n/l10n.dart';
+import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input.dart';
+import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/constants/app_icons.dart';
+import 'package:watashi/src/shared/constants/app_text_styles.dart'; // Import the text styles
+import 'package:watashi/src/shared/presentation/widgets/custom_dialog.dart';
 
 /// Shows the add subscription modal dialog with animation
 Future<void> showConnectionConfigModal(BuildContext context) {
@@ -50,9 +50,22 @@ class AddConnectionConfigModalWidget extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.l10n.wordImport,
-                  style: AppTextStyles.modalHeader, // Use the extracted style
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.l10n.wordImport,
+                      style: AppTextStyles.modalHeader,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      iconSize: 24.sp,
+                      color: AppColors.grey,
+                    ),
+                  ],
                 ),
                 SizedBox(height: 16.h),
                 Text(

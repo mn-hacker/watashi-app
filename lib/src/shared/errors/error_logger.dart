@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:segment/src/shared/errors/app_exceptions.dart';
+import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 //ignore: depend_on_referenced_packages
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
