@@ -1,48 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Set the root directory where the build script is located
-set(ProxyBuildRoot "${CMAKE_CURRENT_SOURCE_DIR}/../scripts")
+# This CMakeLists.txt is for the proxy_core Flutter plugin.
+# Native libraries (.so files) should be pre-built and placed in jniLibs.
+# The build is done via GitHub Actions or manually using build_android.sh script.
 
-# Set the destination directory for the organized .so files (jniLibs)
+# Set the destination directory for JNI libraries
 set(LibRoot "${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs")
 
-# Ensure the jniLibs subdirectories exist
-file(MAKE_DIRECTORY ${LibRoot}/arm64-v8a)
-file(MAKE_DIRECTORY ${LibRoot}/armeabi-v7a)
-file(MAKE_DIRECTORY ${LibRoot}/x86)
-file(MAKE_DIRECTORY ${LibRoot}/x86_64)
-
-# Execute the build script
-execute_process(
-    COMMAND bash ${ProxyBuildRoot}/build_android.sh
-    RESULT_VARIABLE build_result
-)
-
-if(NOT build_result EQUAL 0)
-    message(FATAL_ERROR "Failed to build Android libraries. Please check the build script output for details.")
-endif()
-
-# Set the paths for the generated .so files
-set(ARM64_SO_FILE "${ProxyBuildRoot}/.android_build/arm64/libproxy_core.so")
-set(AMD64_SO_FILE "${ProxyBuildRoot}/.android_build/amd64/libproxy_core.so")
-
-# Copy the ARM64 .so file to both arm64-v8a and armeabi-v7a folders in jniLibs
-if(EXISTS ${ARM64_SO_FILE})
-    file(COPY ${ARM64_SO_FILE} DESTINATION ${LibRoot}/arm64-v8a)
-    file(COPY ${ARM64_SO_FILE} DESTINATION ${LibRoot}/armeabi-v7a)
-    message(STATUS "Copied ${ARM64_SO_FILE} to ${LibRoot}/arm64-v8a and ${LibRoot}/armeabi-v7a")
+# Check if pre-built libraries exist
+if(EXISTS "${LibRoot}/arm64-v8a/libproxy_core.so")
+    message(STATUS "Found pre-built ARM64 library at ${LibRoot}/arm64-v8a/libproxy_core.so")
 else()
-    message(FATAL_ERROR "ARM64 .so file not found after build: ${ARM64_SO_FILE}")
+    message(WARNING "Pre-built ARM64 library not found. Run build_android.sh manually or via CI.")
 endif()
 
-# Copy the AMD64 .so file to both x86 and x86_64 folders in jniLibs
-if(EXISTS ${AMD64_SO_FILE})
-    file(COPY ${AMD64_SO_FILE} DESTINATION ${LibRoot}/x86)
-    file(COPY ${AMD64_SO_FILE} DESTINATION ${LibRoot}/x86_64)
-    message(STATUS "Copied ${AMD64_SO_FILE} to ${LibRoot}/x86 and ${LibRoot}/x86_64")
+if(EXISTS "${LibRoot}/x86_64/libproxy_core.so")
+    message(STATUS "Found pre-built AMD64 library at ${LibRoot}/x86_64/libproxy_core.so")  
 else()
-    message(FATAL_ERROR "AMD64 .so file not found after build: ${AMD64_SO_FILE}")
+    message(WARNING "Pre-built AMD64 library not found. Run build_android.sh manually or via CI.")
 endif()
 
-# Optional: Print a message to confirm the copy operation
-message(STATUS "JNI libraries copied to the respective folders in ${LibRoot}")
+message(STATUS "JNI libraries should be at: ${LibRoot}")

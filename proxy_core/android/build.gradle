@@ -51,18 +51,13 @@ android {
     // (e.g. ndkVersion "23.1.7779620")
     ndkVersion = "27.0.11902837"
 
-    // Invoke the shared CMake build with the Android Gradle Plugin.
-    externalNativeBuild {
-        cmake {
-            path = "CMakeLists.txt"
+    // NOTE: Native libraries (.so files) are prebuilt during CI/CD workflow.
+    // They are copied to src/main/jniLibs/ before the APK build.
+    // To build manually, run: cd proxy_core/scripts && ./build_android.sh
 
-            // The default CMake version for the Android Gradle Plugin is 3.10.2.
-            // https://developer.android.com/studio/projects/install-ndk#vanilla_cmake
-            //
-            // The Flutter tooling requires that developers have CMake 3.10 or later
-            // installed. You should not increase this version, as doing so will cause
-            // the plugin to fail to compile for some customers of the plugin.
-            // version "3.10.2"
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 
