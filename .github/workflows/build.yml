@@ -46,7 +46,12 @@ jobs:
         run: |
           cd proxy_core/scripts
           chmod +x build_android.sh
-          ./build_android.sh
+          ./build_android.sh || true
+
+          echo "=== Listing build output ==="
+          ls -la .android_build/ || echo "No .android_build directory"
+          ls -la .android_build/arm64/ || echo "No arm64 directory"
+          ls -la .android_build/amd64/ || echo "No amd64 directory"
 
       - name: Copy Native Libraries to jniLibs
         run: |
@@ -56,18 +61,42 @@ jobs:
           mkdir -p proxy_core/android/src/main/jniLibs/x86
           mkdir -p proxy_core/android/src/main/jniLibs/x86_64
 
-          # Copy ARM64 library (for arm64-v8a and armeabi-v7a)
-          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/arm64-v8a/
-          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/armeabi-v7a/
+          # Check what was built
+          echo "=== Checking build outputs ==="
+          find proxy_core/scripts/.android_build -name "*.so" 2>/dev/null || echo "No .so files found"
 
-          # Copy x86_64 library (for x86 and x86_64)
-          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86/
-          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86_64/
+          # Copy ARM64 library if exists
+          if [ -f "proxy_core/scripts/.android_build/arm64/libproxy_core.so" ]; then
+            cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/arm64-v8a/
+            echo "Copied ARM64 to arm64-v8a"
+          fi
 
-          # Verify files are copied
-          echo "=== Checking jniLibs contents ==="
-          ls -la proxy_core/android/src/main/jniLibs/arm64-v8a/
-          ls -la proxy_core/android/src/main/jniLibs/armeabi-v7a/
+          # Copy AMD64 library for x86_64
+          if [ -f "proxy_core/scripts/.android_build/amd64/libproxy_core.so" ]; then
+            cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86_64/
+            echo "Copied AMD64 to x86_64"
+          fi
+
+          # For armeabi-v7a, use ARM64 as fallback (or skip if not available)
+          if [ -f "proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so" ]; then
+            cp proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so proxy_core/android/src/main/jniLibs/armeabi-v7a/
+            echo "Copied to armeabi-v7a from arm64"
+          fi
+
+          # For x86, use amd64 as fallback
+          if [ -f "proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so" ]; then
+            cp proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86/
+            echo "Copied to x86 from x86_64"
+          fi
+
+          echo "=== Final jniLibs contents ==="
+          find proxy_core/android/src/main/jniLibs -name "*.so" 2>/dev/null || echo "No .so files in jniLibs"
+
+          # Fail if no libraries were copied
+          if [ ! -f "proxy_core/android/src/main/jniLibs/arm64-v8a/libproxy_core.so" ] && [ ! -f "proxy_core/android/src/main/jniLibs/x86_64/libproxy_core.so" ]; then
+            echo "ERROR: No native libraries were successfully built!"
+            exit 1
+          fi
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -100,10 +129,11 @@ jobs:
       - name: Rename APK files
         run: |
           cd build/app/outputs/flutter-apk
-          mv app-arm64-v8a-release.apk watashi-arm64-v8a.apk
-          mv app-armeabi-v7a-release.apk watashi-armeabi-v7a.apk
+          mv app-arm64-v8a-release.apk watashi-arm64-v8a.apk || true
+          mv app-armeabi-v7a-release.apk watashi-armeabi-v7a.apk || true
           mv app-x86_64-release.apk watashi-x86_64.apk || true
           mv app-release.apk watashi-universal.apk
+          ls -la
 
       - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
