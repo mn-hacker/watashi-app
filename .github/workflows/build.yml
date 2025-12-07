@@ -43,15 +43,13 @@ jobs:
           go-version: "1.21"
 
       - name: Build Native Libraries
+        working-directory: proxy_core/scripts
         run: |
-          cd proxy_core/scripts
           chmod +x build_android.sh
           ./build_android.sh
 
-          echo "=== Build output (from scripts dir) ==="
-          ls -la .android_build/
-          ls -la .android_build/arm64/
-          ls -la .android_build/amd64/
+          echo "=== Finding all .so files ==="
+          find $GITHUB_WORKSPACE -name "libproxy_core.so" -type f 2>/dev/null || echo "No .so files found"
 
       - name: Copy Native Libraries to jniLibs
         run: |
@@ -61,11 +59,31 @@ jobs:
           mkdir -p proxy_core/android/src/main/jniLibs/x86
           mkdir -p proxy_core/android/src/main/jniLibs/x86_64
 
-          # Copy from correct path (scripts/.android_build NOT .android_build)
-          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/arm64-v8a/
-          cp proxy_core/scripts/.android_build/arm64/libproxy_core.so proxy_core/android/src/main/jniLibs/armeabi-v7a/
-          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86_64/
-          cp proxy_core/scripts/.android_build/amd64/libproxy_core.so proxy_core/android/src/main/jniLibs/x86/
+          echo "=== Finding .so files ==="
+          find . -name "libproxy_core.so" -type f
+
+          # Find and copy ARM64 library
+          ARM64_SO=$(find . -path "*arm64*libproxy_core.so" -type f | head -1)
+          if [ -n "$ARM64_SO" ]; then
+            echo "Found ARM64: $ARM64_SO"
+            cp "$ARM64_SO" proxy_core/android/src/main/jniLibs/arm64-v8a/
+            cp "$ARM64_SO" proxy_core/android/src/main/jniLibs/armeabi-v7a/
+          else
+            echo "ERROR: ARM64 library not found!"
+            exit 1
+          fi
+
+          # Find and copy AMD64 library  
+          AMD64_SO=$(find . -path "*amd64*libproxy_core.so" -type f | head -1)
+          if [ -n "$AMD64_SO" ]; then
+            echo "Found AMD64: $AMD64_SO"
+            cp "$AMD64_SO" proxy_core/android/src/main/jniLibs/x86_64/
+            cp "$AMD64_SO" proxy_core/android/src/main/jniLibs/x86/
+          else
+            echo "WARNING: AMD64 library not found, using ARM64 for x86"
+            cp "$ARM64_SO" proxy_core/android/src/main/jniLibs/x86_64/ || true
+            cp "$ARM64_SO" proxy_core/android/src/main/jniLibs/x86/ || true
+          fi
 
           echo "=== jniLibs contents ==="
           find proxy_core/android/src/main/jniLibs -name "*.so"
