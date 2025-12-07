@@ -1,6 +1,6 @@
 name: watashi
-description: "Watashi App - An app for freedom of internet"
-publish_to: 'none'
+description: "Watashi VPN - An app for freedom of internet"
+publish_to: "none"
 version: 1.0.0
 
 environment:
@@ -36,6 +36,12 @@ dependencies:
   hive: 2.2.3
   shared_preferences: 2.5.3
 
+  # QR Code Scanner
+  mobile_scanner: ^7.0.1
+
+  # Sharing
+  share_plus: ^10.0.0
+
   # Native Libs
   proxy_core:
     path: ./proxy_core
@@ -52,7 +58,6 @@ dependencies:
       ref: lookup
 
 dev_dependencies:
-
   # Tests and Testers
   flutter_test:
     sdk: flutter
@@ -72,7 +77,6 @@ dev_dependencies:
   flutter_gen_runner: 5.10.0
   go_router_builder: 2.9.0
   ffigen: 19.0.0
-
 
 flutter:
   generate: true

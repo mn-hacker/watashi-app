@@ -1,4 +1,4 @@
-package com.watashi.watashiapp
+package com.watashi.watashivpn
 
 import io.flutter.embedding.android.FlutterActivity
 

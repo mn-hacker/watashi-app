@@ -10,13 +10,19 @@ class MainRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppSizes.p12),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.grey.shade300),
+          border: Border.all(
+            color: isDarkMode
+                ? AppColors.darkItemsBackground
+                : AppColors.grey.shade300,
+          ),
           borderRadius: BorderRadius.circular(8.r),
-          color: AppColors.white,
+          color: isDarkMode ? AppColors.darkCard : AppColors.white,
         ),
         child: InkWell(
           child: Padding(

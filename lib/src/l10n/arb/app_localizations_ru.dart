@@ -43,4 +43,70 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get anErrorHappened => 'Произошла ошибка';
+
+  @override
+  String get scanQRCode => 'Сканировать QR-код';
+
+  @override
+  String get addFromClipboard => 'Добавить из буфера';
+
+  @override
+  String get manualAdd => 'Добавить вручную';
+
+  @override
+  String get configAddedSuccess => 'Конфигурация успешно добавлена';
+
+  @override
+  String get invalidQRCode => 'Неверный QR-код';
+
+  @override
+  String get clipboardEmpty => 'Буфер обмена пуст';
+
+  @override
+  String get noConfigInClipboard => 'В буфере обмена нет конфигурации';
+
+  @override
+  String get addConfig => 'Добавить конфигурацию';
+
+  @override
+  String get home => 'Главная';
+
+  @override
+  String get proxies => 'Прокси';
+
+  @override
+  String get autoSelect => 'авто';
+
+  @override
+  String get serviceNotRunning => 'Служба не запущена';
+
+  @override
+  String get connectToViewProxies => 'Подключитесь для просмотра прокси';
+
+  @override
+  String get sortByPing => 'Сортировать по пингу';
+
+  @override
+  String get refreshPing => 'Обновить пинг';
+
+  @override
+  String get editConfig => 'Редактировать';
+
+  @override
+  String get deleteConfig => 'Удалить';
+
+  @override
+  String get configRemark => 'Название';
+
+  @override
+  String get configAddress => 'Адрес';
+
+  @override
+  String get configPort => 'Порт';
+
+  @override
+  String get configUuid => 'UUID';
+
+  @override
+  String get saveChanges => 'Сохранить';
 }

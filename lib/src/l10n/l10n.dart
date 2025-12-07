@@ -70,7 +70,7 @@ final localeProvider = StateNotifierProvider<LocaleNotifier, Locale?>((ref) {
 });
 
 class LocaleNotifier extends StateNotifier<Locale?> {
-  LocaleNotifier() : super(null) {
+  LocaleNotifier() : super(SupportedLocales.en) {
     _loadLocale();
   }
 
@@ -81,6 +81,9 @@ class LocaleNotifier extends StateNotifier<Locale?> {
     final languageCode = prefs.getString(_key);
     if (languageCode != null) {
       state = Locale(languageCode);
+    } else {
+      // Default to English if no locale is saved
+      state = SupportedLocales.en;
     }
   }
 

@@ -165,6 +165,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error happened'**
   String get anErrorHappened;
+
+  /// No description provided for @scanQRCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scanQRCode;
+
+  /// No description provided for @addFromClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add from Clipboard'**
+  String get addFromClipboard;
+
+  /// No description provided for @manualAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Add'**
+  String get manualAdd;
+
+  /// No description provided for @configAddedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Config added successfully'**
+  String get configAddedSuccess;
+
+  /// No description provided for @invalidQRCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code'**
+  String get invalidQRCode;
+
+  /// No description provided for @clipboardEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Clipboard is empty'**
+  String get clipboardEmpty;
+
+  /// No description provided for @noConfigInClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'No valid config found in clipboard'**
+  String get noConfigInClipboard;
+
+  /// No description provided for @addConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Config'**
+  String get addConfig;
+
+  /// No description provided for @home.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @proxies.
+  ///
+  /// In en, this message translates to:
+  /// **'Proxies'**
+  String get proxies;
+
+  /// No description provided for @autoSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'auto'**
+  String get autoSelect;
+
+  /// No description provided for @serviceNotRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Service is not running'**
+  String get serviceNotRunning;
+
+  /// No description provided for @connectToViewProxies.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to view proxies'**
+  String get connectToViewProxies;
+
+  /// No description provided for @sortByPing.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by ping'**
+  String get sortByPing;
+
+  /// No description provided for @refreshPing.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh ping'**
+  String get refreshPing;
+
+  /// No description provided for @editConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Config'**
+  String get editConfig;
+
+  /// No description provided for @deleteConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Config'**
+  String get deleteConfig;
+
+  /// No description provided for @configRemark.
+  ///
+  /// In en, this message translates to:
+  /// **'Remark'**
+  String get configRemark;
+
+  /// No description provided for @configAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get configAddress;
+
+  /// No description provided for @configPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get configPort;
+
+  /// No description provided for @configUuid.
+  ///
+  /// In en, this message translates to:
+  /// **'UUID'**
+  String get configUuid;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
 }
 
 class _AppLocalizationsDelegate

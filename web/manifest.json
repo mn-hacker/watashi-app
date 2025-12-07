@@ -1,11 +1,11 @@
 {
-    "name": "Watashi App",
+    "name": "Watashi VPN",
     "short_name": "Watashi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Watashi App - An app for freedom of internet",
+    "description": "Watashi VPN - An app for freedom of internet",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -43,4 +43,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get anErrorHappened => 'An error happened';
+
+  @override
+  String get scanQRCode => 'Scan QR Code';
+
+  @override
+  String get addFromClipboard => 'Add from Clipboard';
+
+  @override
+  String get manualAdd => 'Manual Add';
+
+  @override
+  String get configAddedSuccess => 'Config added successfully';
+
+  @override
+  String get invalidQRCode => 'Invalid QR code';
+
+  @override
+  String get clipboardEmpty => 'Clipboard is empty';
+
+  @override
+  String get noConfigInClipboard => 'No valid config found in clipboard';
+
+  @override
+  String get addConfig => 'Add Config';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get proxies => 'Proxies';
+
+  @override
+  String get autoSelect => 'auto';
+
+  @override
+  String get serviceNotRunning => 'Service is not running';
+
+  @override
+  String get connectToViewProxies => 'Connect to view proxies';
+
+  @override
+  String get sortByPing => 'Sort by ping';
+
+  @override
+  String get refreshPing => 'Refresh ping';
+
+  @override
+  String get editConfig => 'Edit Config';
+
+  @override
+  String get deleteConfig => 'Delete Config';
+
+  @override
+  String get configRemark => 'Remark';
+
+  @override
+  String get configAddress => 'Address';
+
+  @override
+  String get configPort => 'Port';
+
+  @override
+  String get configUuid => 'UUID';
+
+  @override
+  String get saveChanges => 'Save Changes';
 }

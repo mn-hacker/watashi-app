@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.watashi.watashiapp" "\0"
-            VALUE "FileDescription", "Watashi App" "\0"
+            VALUE "CompanyName", "com.watashi.watashivpn" "\0"
+            VALUE "FileDescription", "Watashi VPN" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "watashi" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.watashi.watashiapp. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 com.watashi.watashivpn. All rights reserved." "\0"
             VALUE "OriginalFilename", "watashi.exe" "\0"
-            VALUE "ProductName", "Watashi App" "\0"
+            VALUE "ProductName", "Watashi VPN" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

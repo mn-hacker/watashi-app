@@ -31,15 +31,19 @@ class _SettingsModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsModalControllerProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Material(
       color: AppColors.transparent,
       child: Center(
         child: Container(
           width: 300.w,
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+          ),
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: isDarkMode ? AppColors.darkSurface : AppColors.white,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -53,8 +57,8 @@ class _SettingsModal extends ConsumerWidget {
             padding: EdgeInsets.all(20.w),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Header (fixed at top)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -72,18 +76,28 @@ class _SettingsModal extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // Due to iOS limitations, the connection mode section is not shown (See ProxyCore Readme)
-                if (!Platform.isIOS) _ConnectionModeSection(settings: settings),
                 SizedBox(height: 16.h),
-                _CoreTypeSection(settings: settings),
-                SizedBox(height: 20.h),
-                _ConnectionLoadTypeSection(settings: settings),
-                SizedBox(height: 20.h),
-                const _ThemeSection(),
-                SizedBox(height: 20.h),
-                const _LanguageSection(),
-                SizedBox(height: 24.h),
-                const _ActionButtons(),
+                // Scrollable content
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Due to iOS limitations, the connection mode section is not shown (See ProxyCore Readme)
+                        if (!Platform.isIOS)
+                          _ConnectionModeSection(settings: settings),
+                        if (!Platform.isIOS) SizedBox(height: 16.h),
+                        _CoreTypeSection(settings: settings),
+                        SizedBox(height: 20.h),
+                        const _ThemeSection(),
+                        SizedBox(height: 20.h),
+                        const _LanguageSection(),
+                        SizedBox(height: 24.h),
+                        const _ActionButtons(),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
