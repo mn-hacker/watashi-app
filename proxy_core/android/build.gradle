@@ -25,9 +25,9 @@ rootProject.allprojects {
         google()
         mavenCentral()
         // For local AAR files (libbox.aar for SingBox)
-        // Use file path relative to this build.gradle
+        // rootProject.projectDir is android/ folder, so go up one level to main project
         flatDir {
-            dirs "${rootProject.projectDir}/proxy_core/android/libs"
+            dirs "${rootProject.projectDir}/../proxy_core/android/libs"
         }
     }
 }
