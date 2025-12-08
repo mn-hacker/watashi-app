@@ -101,38 +101,88 @@ class ConnectionConfigInputController
     return lines.length > 1;
   }
 
+  /// Check if line is a valid config (starts with known protocol)
+  bool _isValidConfigLine(String line) {
+    final validPrefixes = [
+      'vless://',
+      'vmess://',
+      'trojan://',
+      'ss://',
+      'ssr://',
+      'hysteria://',
+      'hysteria2://',
+      'hy2://',
+      'tuic://',
+      'wireguard://',
+      'wg://',
+      '{', // JSON config
+    ];
+    final lowerLine = line.toLowerCase();
+    return validPrefixes.any((prefix) => lowerLine.startsWith(prefix));
+  }
+
   /// Fetch subscription URL and add all configs from it
   Future<void> _fetchSubscription(String url) async {
     state = state.copyWith(error: null);
+    print('[Subscription] Fetching: $url');
 
     try {
       final httpClient = HttpClient();
-      httpClient.connectionTimeout = const Duration(seconds: 10);
+      httpClient.connectionTimeout = const Duration(seconds: 15);
+      httpClient.badCertificateCallback =
+          (cert, host, port) => true; // Allow self-signed certs
 
       final request = await httpClient.getUrl(Uri.parse(url));
+      request.followRedirects = true;
+      request.maxRedirects = 5;
+
+      // Add common headers
+      request.headers.add('User-Agent', 'WatashiVPN/1.0');
+      request.headers.add('Accept', '*/*');
+
       final response = await request.close();
+      print('[Subscription] Response status: ${response.statusCode}');
 
       if (response.statusCode != 200) {
         state = state.copyWith(
-            error: 'Failed to fetch subscription: ${response.statusCode}');
+            error: 'Failed to fetch subscription: HTTP ${response.statusCode}');
+        httpClient.close();
         return;
       }
 
       final content = await response.transform(utf8.decoder).join();
       httpClient.close();
 
+      print('[Subscription] Content length: ${content.length}');
+      print(
+          '[Subscription] Content preview: ${content.substring(0, content.length > 100 ? 100 : content.length)}...');
+
       // Try to decode as base64
       String decodedContent;
       try {
-        decodedContent = utf8.decode(base64.decode(content.trim()));
+        // Fix base64 padding if needed
+        String base64Content = content.trim();
+        // Remove any whitespace/newlines within base64
+        base64Content = base64Content.replaceAll(RegExp(r'\s'), '');
+        // Add padding if necessary
+        while (base64Content.length % 4 != 0) {
+          base64Content += '=';
+        }
+        decodedContent = utf8.decode(base64.decode(base64Content));
+        print('[Subscription] Base64 decoded successfully');
+        print(
+            '[Subscription] Decoded preview: ${decodedContent.substring(0, decodedContent.length > 200 ? 200 : decodedContent.length)}...');
       } catch (e) {
         // Not base64, use as-is
+        print('[Subscription] Not base64, using raw content: $e');
         decodedContent = content;
       }
 
       // Parse and add configs
       _addMultipleConfigs(decodedContent);
-    } catch (e) {
+    } catch (e, stack) {
+      print('[Subscription] Error: $e');
+      print('[Subscription] Stack: $stack');
       state = state.copyWith(error: 'Failed to fetch subscription: $e');
     }
   }
@@ -144,16 +194,39 @@ class ConnectionConfigInputController
     final configRepo = ref.read(connectionConfigRepoProvider);
     int addedCount = 0;
 
-    for (final line in lines) {
+    print('[AddConfigs] Found ${lines.length} lines to process');
+
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i].trim();
+
+      // Skip comment lines
+      if (line.startsWith('#') || line.startsWith('//')) {
+        print('[AddConfigs] Skipping comment line $i');
+        continue;
+      }
+
+      // Only process valid protocol prefixes
+      if (!_isValidConfigLine(line)) {
+        print(
+            '[AddConfigs] Skipping non-config line $i: ${line.substring(0, line.length > 30 ? 30 : line.length)}...');
+        continue;
+      }
+
       try {
-        final config = _buildConfig(line.trim());
+        print(
+            '[AddConfigs] Processing line $i: ${line.substring(0, line.length > 50 ? 50 : line.length)}...');
+        final config = _buildConfig(line);
         configRepo.addConfig(config);
         addedCount++;
+        print('[AddConfigs] Successfully added: ${config.configName}');
       } catch (e) {
         // Skip invalid lines
+        print('[AddConfigs] Failed to parse line $i: $e');
         continue;
       }
     }
+
+    print('[AddConfigs] Total configs added: $addedCount');
 
     if (addedCount > 0) {
       // Save all configs

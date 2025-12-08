@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
@@ -17,16 +18,18 @@ class ProxiesController extends AsyncNotifier<bool> {
   /// Test ping for all configs in parallel (much faster!)
   Future<void> testAllPings() async {
     state = const AsyncData(true); // Start loading
+    debugPrint('[Ping] Starting ping test for all configs...');
 
     final configRepo = ref.read(connectionConfigRepoProvider);
     final sharedPrefs = ref.read(sharedPrefsRepoProvider);
 
     // Run all pings in parallel
     final futures = configRepo.configs.map((config) async {
+      debugPrint(
+          '[Ping] Testing ${config.configName}: ${config.serverAddress}:${config.serverPort}');
       final ping = await _testPing(config.serverAddress, config.serverPort);
+      debugPrint('[Ping] Result for ${config.configName}: $ping ms');
       configRepo.updatePing(config.id, ping);
-      // Notify listeners after each ping for live updates
-      ref.notifyListeners();
     }).toList();
 
     // Wait for all pings to complete
@@ -35,6 +38,7 @@ class ProxiesController extends AsyncNotifier<bool> {
     // Save updated configs with ping values
     await sharedPrefs.saveAllConfigs(configRepo.configs);
 
+    debugPrint('[Ping] All pings completed!');
     state = const AsyncData(false); // Done loading
   }
 
@@ -57,6 +61,7 @@ class ProxiesController extends AsyncNotifier<bool> {
 
       return stopwatch.elapsedMilliseconds;
     } catch (e) {
+      debugPrint('[Ping] Error connecting to $address:$port - $e');
       // Connection failed or timeout
       return -1;
     }
@@ -74,7 +79,5 @@ class ProxiesController extends AsyncNotifier<bool> {
 
     // Save updated config
     await ref.read(sharedPrefsRepoProvider).saveAllConfigs(configRepo.configs);
-
-    ref.notifyListeners();
   }
 }

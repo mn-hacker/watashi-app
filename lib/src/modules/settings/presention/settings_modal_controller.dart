@@ -30,8 +30,12 @@ class SettingsModalController extends Notifier<SettingsModel> {
   }
 
   void updateSettings() {
+    print(
+        'SettingsModalController.updateSettings: connectionMode = ${state.connectionMode.name}');
     ref.read(settingsRepoProvider).settings = state;
     ref.read(connectionModeProvider.notifier).state = state.connectionMode;
+    print(
+        'SettingsModalController.updateSettings: connectionModeProvider updated');
   }
 
   void restoreDefaults() {

@@ -61,6 +61,10 @@ class _FullScreenMenu extends ConsumerWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: isDarkMode ? AppColors.darkCard : AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24.r),
+                      bottomLeft: Radius.circular(24.r),
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: isDarkMode

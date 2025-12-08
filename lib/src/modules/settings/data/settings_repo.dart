@@ -17,6 +17,6 @@ class SettingRepo {
   set settings(SettingsModel? settings) => _userSettings = settings;
 }
 
-final settingsRepoProvider = AutoDisposeProvider((ref) {
+final settingsRepoProvider = Provider((ref) {
   return SettingRepo();
 });

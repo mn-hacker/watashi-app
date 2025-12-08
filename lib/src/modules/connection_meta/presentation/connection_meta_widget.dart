@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_controller.dart';
 import 'package:watashi/src/modules/main/presentation/main_controller.dart';
 import 'package:watashi/src/modules/main/presentation/widgets/main_row_item.dart';
+import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/constants/app_icons.dart';
 import 'package:watashi/src/shared/constants/app_sizes.dart';
 import 'package:watashi/src/shared/constants/app_text_styles.dart';
@@ -16,6 +17,9 @@ class ConnectionMetaWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final connectionMetaAsync = ref.watch(connectionMetaControllerProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor =
+        isDarkMode ? AppColors.darkTextPrimary : AppColors.textPrimary;
 
     return MainRowItem(
       child: Row(
@@ -23,19 +27,19 @@ class ConnectionMetaWidget extends ConsumerWidget {
           if (connectionMetaAsync != null) ...[
             Text(
               connectionMetaAsync.flagEmoji,
-              style: AppTextStyles.ipAddressText,
+              style: AppTextStyles.ipAddressText.copyWith(color: textColor),
             ),
             SizedBox(width: 12.w),
             Text(
               connectionMetaAsync.ip,
-              style: AppTextStyles.ipAddressText,
+              style: AppTextStyles.ipAddressText.copyWith(color: textColor),
             ),
           ] else ...[
             AppIcons.loadingIndicator(size: 15.r),
             SizedBox(width: 12.w),
             Text(
               'Loading...',
-              style: AppTextStyles.ipAddressText,
+              style: AppTextStyles.ipAddressText.copyWith(color: textColor),
             ),
           ],
           const Spacer(),

@@ -36,7 +36,10 @@ class CoreRepo {
   Future<void> start(
       ConnectionMode mode, ConnectionConfigModel config, CoreNames core) async {
     try {
+      // Debug: Log which mode is being used
+      print('CoreRepo.start: Starting with mode = ${mode.name}');
       final coreConfig = await _buildCoreConfig(mode, config, core);
+      print('CoreRepo.start: Config vpnMode = ${coreConfig.vpnMode}');
       await ProxyCore.ins.start(coreConfig);
     } catch (e) {
       await stop();

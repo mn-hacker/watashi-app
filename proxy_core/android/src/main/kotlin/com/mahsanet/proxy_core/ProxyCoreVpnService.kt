@@ -1,5 +1,9 @@
 package com.mahsanet.proxy_core
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.net.VpnService
 import android.os.Build
@@ -7,15 +11,23 @@ import android.os.Parcelable
 import android.os.ResultReceiver
 import android.util.Log
 import android.os.ParcelFileDescriptor
+import androidx.core.app.NotificationCompat
 import com.mahsanet.proxy_core.enums.VpnMethods
 
 private const val VPN_STATUS_ACTION = "com.mahsanet.proxy_core.VPN_STATUS_CHANGED"
+private const val NOTIFICATION_CHANNEL_ID = "vpn_service_channel"
+private const val NOTIFICATION_ID = 1
 
 class ProxyCoreVpnService : VpnService() {
     @Volatile private var vpnFd: Int = -1
     @Volatile private var vpnState: VpnMethods = VpnMethods.STOP_VPN
     @Volatile private var vpnInterface: ParcelFileDescriptor? = null
     @Volatile private var isFdDetached: Boolean = false
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action?.let { action ->
@@ -28,6 +40,52 @@ class ProxyCoreVpnService : VpnService() {
         }
             ?: Log.e(VpnMethods.TAG, "Intent is null!")
         return START_STICKY
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                "VPN Service",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "VPN connection status"
+                setShowBadge(false)
+            }
+            val manager = getSystemService(NotificationManager::class.java)
+            manager?.createNotificationChannel(channel)
+        }
+    }
+
+    private fun createNotification(): Notification {
+        val pendingIntent = packageManager.getLaunchIntentForPackage(packageName)?.let { intent ->
+            PendingIntent.getActivity(
+                this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle("VPN Connected")
+            .setContentText("Secure connection active")
+            .setSmallIcon(android.R.drawable.ic_lock_lock)
+            .setOngoing(true)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(pendingIntent)
+            .build()
+    }
+
+    private fun startForegroundWithNotification() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                startForeground(NOTIFICATION_ID, createNotification(), android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            } else {
+                startForeground(NOTIFICATION_ID, createNotification())
+            }
+            Log.i(VpnMethods.TAG, "Started foreground service with notification")
+        } catch (e: Exception) {
+            Log.e(VpnMethods.TAG, "Failed to start foreground service", e)
+        }
     }
 
     override fun onRevoke() {
@@ -102,6 +160,8 @@ class ProxyCoreVpnService : VpnService() {
                 vpnInterface = result.second
                 vpnFd = result.first
                 vpnState = VpnMethods.START_VPN
+                // Start as foreground service to keep running when app is closed
+                startForegroundWithNotification()
                 broadcastVpnStatus(true)
                 Log.i(VpnMethods.TAG, "VPN started successfully with fd: $vpnFd")
                 sendResultReceiver(intent, vpnFd)

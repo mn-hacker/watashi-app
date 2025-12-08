@@ -187,7 +187,12 @@ class ProxyCorePlugin :
             action = VpnMethods.START_VPN.methodName
             putExtra(VpnMethods.EXTRA_RESULT_RECEIVER, createResultReceiver(result))
         }
-        applicationContext?.startService(intent)
+        // Use startForegroundService on Android 8+ to keep VPN running when app closed
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            applicationContext?.startForegroundService(intent)
+        } else {
+            applicationContext?.startService(intent)
+        }
     }
 
     private fun stopVPN(result: MethodChannel.Result) {

@@ -20,6 +20,8 @@ class RadioOption<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return RadioListTile(
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
@@ -27,13 +29,24 @@ class RadioOption<T> extends StatelessWidget {
       groupValue: groupValue,
       onChanged: onChanged,
       title: Text.rich(
-        TextSpan(text: title, style: AppTextStyles.radioOptionTitle, children: [
-          if (subtitle != null)
-            TextSpan(
-              text: " $subtitle",
-              style: AppTextStyles.radioOptionSubtitle,
-            ),
-        ]),
+        TextSpan(
+          text: title,
+          style: AppTextStyles.radioOptionTitle.copyWith(
+            color:
+                isDarkMode ? AppColors.darkTextPrimary : AppColors.textPrimary,
+          ),
+          children: [
+            if (subtitle != null)
+              TextSpan(
+                text: " $subtitle",
+                style: AppTextStyles.radioOptionSubtitle.copyWith(
+                  color: isDarkMode
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary,
+                ),
+              ),
+          ],
+        ),
       ),
       activeColor: AppColors.accent,
     );

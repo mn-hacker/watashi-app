@@ -67,7 +67,11 @@ class _SettingsModal extends ConsumerWidget {
                   children: [
                     Text(
                       context.l10n.customization,
-                      style: AppTextStyles.settingsModalTitle,
+                      style: AppTextStyles.settingsModalTitle.copyWith(
+                        color: isDarkMode
+                            ? AppColors.darkTextPrimary
+                            : AppColors.textPrimary,
+                      ),
                     ),
                     IconButton(
                       icon: Icon(
@@ -124,12 +128,18 @@ class _ConnectionModeSection extends ConsumerWidget {
     final settingsController =
         ref.read(settingsModalControllerProvider.notifier);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.l10n.connectionMode,
-          style: AppTextStyles.settingsModalSectionTitle,
+          style: AppTextStyles.settingsModalSectionTitle.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 12.h),
         RadioOption<ConnectionMode>(
@@ -159,19 +169,44 @@ class _CoreTypeSection extends ConsumerWidget {
     final settingsController =
         ref.read(settingsModalControllerProvider.notifier);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.l10n.coreType,
-          style: AppTextStyles.settingsModalSectionTitle,
+          style: AppTextStyles.settingsModalSectionTitle.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 12.h),
         RadioOption<CoreNames>(
           title: 'Xray',
-          subtitle: '(Mahsa Edition)',
+          subtitle: '(Custom)',
           groupValue: settings.coreType,
           value: CoreNames.xray,
+          onChanged: (value) => settingsController.updateCoreType(value!),
+        ),
+        RadioOption<CoreNames>(
+          title: 'Clash Meta',
+          groupValue: settings.coreType,
+          value: CoreNames.clashMeta,
+          onChanged: (value) => settingsController.updateCoreType(value!),
+        ),
+        RadioOption<CoreNames>(
+          title: 'SingBox',
+          groupValue: settings.coreType,
+          value: CoreNames.singbox,
+          onChanged: (value) => settingsController.updateCoreType(value!),
+        ),
+        RadioOption<CoreNames>(
+          title: 'Xray',
+          subtitle: '(V2ray)',
+          groupValue: settings.coreType,
+          value: CoreNames.v2ray,
           onChanged: (value) => settingsController.updateCoreType(value!),
         ),
         RadioOption<CoreNames>(
@@ -228,12 +263,18 @@ class _ThemeSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.l10n.theme,
-          style: AppTextStyles.settingsModalSectionTitle,
+          style: AppTextStyles.settingsModalSectionTitle.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 12.h),
         RadioOption<ThemeMode>(
@@ -269,12 +310,18 @@ class _LanguageSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           context.l10n.language,
-          style: AppTextStyles.settingsModalSectionTitle,
+          style: AppTextStyles.settingsModalSectionTitle.copyWith(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
         ),
         SizedBox(height: 12.h),
         ...SupportedLocales.all.map((locale) => RadioOption<Locale>(
@@ -297,6 +344,8 @@ class _ActionButtons extends ConsumerWidget {
     final settingsController =
         ref.read(settingsModalControllerProvider.notifier);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -304,7 +353,11 @@ class _ActionButtons extends ConsumerWidget {
           onPressed: settingsController.restoreDefaults,
           child: Text(
             context.l10n.restoreDefaults,
-            style: AppTextStyles.settingsModalRestoreButton,
+            style: AppTextStyles.settingsModalRestoreButton.copyWith(
+              color: isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
+            ),
           ),
         ),
         ElevatedButton(

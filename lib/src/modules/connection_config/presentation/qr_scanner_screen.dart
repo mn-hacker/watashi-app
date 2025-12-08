@@ -37,27 +37,37 @@ class _QRScannerScreenState extends ConsumerState<QRScannerScreen> {
         foregroundColor: AppColors.white,
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          // Camera preview - full screen
-          Positioned.fill(
-            child: MobileScanner(
-              controller: _scannerController,
-              onDetect: (capture) => _onDetect(capture, context),
-            ),
-          ),
-          // Dark overlay with scan window
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _ScanOverlayPainter(scanAreaSize: scanAreaSize),
-            ),
-          ),
-          // Scan frame border and text
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
+      body: Builder(
+        builder: (context) {
+          final topOffset = (MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top -
+                  kToolbarHeight -
+                  scanAreaSize) /
+              2;
+
+          return Stack(
+            children: [
+              // Camera preview - full screen
+              Positioned.fill(
+                child: MobileScanner(
+                  controller: _scannerController,
+                  onDetect: (capture) => _onDetect(capture, context),
+                ),
+              ),
+              // Dark overlay with scan window
+              Positioned.fill(
+                child: CustomPaint(
+                  painter: _ScanOverlayPainter(
+                    scanAreaSize: scanAreaSize,
+                    topOffset: topOffset,
+                  ),
+                ),
+              ),
+              // Scan frame border - exactly centered
+              Positioned(
+                left: (MediaQuery.of(context).size.width - scanAreaSize) / 2,
+                top: topOffset,
+                child: Container(
                   width: scanAreaSize,
                   height: scanAreaSize,
                   decoration: BoxDecoration(
@@ -65,19 +75,25 @@ class _QRScannerScreenState extends ConsumerState<QRScannerScreen> {
                     borderRadius: BorderRadius.circular(16.r),
                   ),
                 ),
-                SizedBox(height: 24.h),
-                Text(
+              ),
+              // Text below scan area
+              Positioned(
+                left: 0,
+                right: 0,
+                top: topOffset + scanAreaSize + 24.h,
+                child: Text(
                   l10n.scanQRCode,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: AppColors.white,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -124,8 +140,9 @@ class _QRScannerScreenState extends ConsumerState<QRScannerScreen> {
 
 class _ScanOverlayPainter extends CustomPainter {
   final double scanAreaSize;
+  final double topOffset;
 
-  _ScanOverlayPainter({required this.scanAreaSize});
+  _ScanOverlayPainter({required this.scanAreaSize, required this.topOffset});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -134,10 +151,11 @@ class _ScanOverlayPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final scanAreaRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(size.width / 2, size.height / 2),
-        width: scanAreaSize,
-        height: scanAreaSize,
+      Rect.fromLTWH(
+        (size.width - scanAreaSize) / 2,
+        topOffset,
+        scanAreaSize,
+        scanAreaSize,
       ),
       const Radius.circular(16),
     );
@@ -153,5 +171,6 @@ class _ScanOverlayPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _ScanOverlayPainter oldDelegate) =>
-      oldDelegate.scanAreaSize != scanAreaSize;
+      oldDelegate.scanAreaSize != scanAreaSize ||
+      oldDelegate.topOffset != topOffset;
 }
