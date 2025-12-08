@@ -24,6 +24,10 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
+        // For local AAR files (libbox.aar for SingBox)
+        flatDir {
+            dirs 'libs'
+        }
     }
 }
 
@@ -35,6 +39,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat-resources:1.7.0")
     implementation('androidx.activity:activity-ktx:1.9.3')
     implementation('androidx.fragment:fragment-ktx:1.8.5')
+    // SingBox libbox
+    implementation(name: 'libbox', ext: 'aar')
 }
 android {
     if (project.android.hasProperty("namespace")) {

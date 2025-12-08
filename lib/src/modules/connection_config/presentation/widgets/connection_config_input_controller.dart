@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
@@ -110,29 +112,75 @@ class ConnectionConfigInputController
   }
 
   /// Check if line is a valid config (starts with known protocol)
+  /// Based on Hiddify's link_parsers.dart
   bool _isValidConfigLine(String line) {
     final validPrefixes = [
+      // Standard protocols
       'vless://',
       'vmess://',
       'trojan://',
       'ss://',
-      'ssr://',
+      'ssconf://', // Shadowsocks config
+      'ssr://', // ShadowsocksR
+
+      // Hysteria
       'hysteria://',
       'hysteria2://',
       'hy2://',
+      'hy://',
+
+      // TUIC
       'tuic://',
+
+      // Wireguard
       'wireguard://',
       'wg://',
-      '{', // JSON config
+
+      // WARP
+      'warp://',
+
+      // SSH
+      'ssh://',
+
+      // SOCKS/HTTP
+      'socks://',
+      'socks5://',
+      'http://',
+
+      // JSON config
+      '{',
     ];
     final lowerLine = line.toLowerCase();
     return validPrefixes.any((prefix) => lowerLine.startsWith(prefix));
   }
 
+  /// Check if content contains multiple protocol prefixes
+  bool _containsMultipleProtocols(String content) {
+    final protocolPattern = RegExp(
+      r'(vmess|vless|trojan|ss|ssr|hysteria2?|hy2?|tuic|wireguard|wg|warp|ssh|socks5?)://',
+      caseSensitive: false,
+    );
+    final matches = protocolPattern.allMatches(content);
+    return matches.length > 1;
+  }
+
+  /// Split content by protocol prefixes
+  List<String> _splitByProtocols(String content) {
+    final protocolPattern = RegExp(
+      r'(?=vmess://|vless://|trojan://|ss://|ssr://|hysteria2://|hysteria://|hy2://|hy://|tuic://|wireguard://|wg://|warp://|ssh://|socks5?://)',
+      caseSensitive: false,
+    );
+    return content
+        .split(protocolPattern)
+        .where((s) => s.trim().isNotEmpty)
+        .map((s) => s.trim())
+        .toList();
+  }
+
   /// Fetch subscription URL and add all configs from it
   Future<void> _fetchSubscription(String url) async {
     state = state.copyWith(error: null);
-    print('[Subscription] Fetching: $url');
+    debugPrint('[Subscription] Fetching: $url');
 
     try {
       final httpClient = HttpClient();
@@ -149,7 +197,7 @@ class ConnectionConfigInputController
       request.headers.add('Accept', '*/*');
 
       final response = await request.close();
-      print('[Subscription] Response status: ${response.statusCode}');
+      debugPrint('[Subscription] Response status: ${response.statusCode}');
 
       if (response.statusCode != 200) {
         state = state.copyWith(
@@ -161,8 +209,8 @@ class ConnectionConfigInputController
       final content = await response.transform(utf8.decoder).join();
       httpClient.close();
 
-      print('[Subscription] Content length: ${content.length}');
-      print(
+      debugPrint('[Subscription] Content length: ${content.length}');
+      debugPrint(
           '[Subscription] Content preview: ${content.substring(0, content.length > 100 ? 100 : content.length)}...');
 
       // Try to decode as base64
@@ -177,64 +225,72 @@ class ConnectionConfigInputController
           base64Content += '=';
         }
         decodedContent = utf8.decode(base64.decode(base64Content));
-        print('[Subscription] Base64 decoded successfully');
-        print(
+        debugPrint('[Subscription] Base64 decoded successfully');
+        debugPrint(
             '[Subscription] Decoded preview: ${decodedContent.substring(0, decodedContent.length > 200 ? 200 : decodedContent.length)}...');
       } catch (e) {
         // Not base64, use as-is
-        print('[Subscription] Not base64, using raw content: $e');
+        debugPrint('[Subscription] Not base64, using raw content: $e');
         decodedContent = content;
       }
 
       // Parse and add configs
       _addMultipleConfigs(decodedContent);
     } catch (e, stack) {
-      print('[Subscription] Error: $e');
-      print('[Subscription] Stack: $stack');
+      debugPrint('[Subscription] Error: $e');
+      debugPrint('[Subscription] Stack: $stack');
       state = state.copyWith(error: 'Failed to fetch subscription: $e');
     }
   }
 
   /// Add multiple configs from multi-line input
   void _addMultipleConfigs(String content) {
-    final lines =
-        content.split('\n').where((l) => l.trim().isNotEmpty).toList();
+    // First, try splitting by newlines
+    var lines = content.split('\n').where((l) => l.trim().isNotEmpty).toList();
+
+    // If only one line but contains multiple protocols, split by protocol prefixes
+    if (lines.length == 1 && _containsMultipleProtocols(content)) {
+      lines = _splitByProtocols(content);
+      debugPrint(
+          '[AddConfigs] Split by protocols, found ${lines.length} configs');
+    }
+
     final configRepo = ref.read(connectionConfigRepoProvider);
     int addedCount = 0;
 
-    print('[AddConfigs] Found ${lines.length} lines to process');
+    debugPrint('[AddConfigs] Found ${lines.length} lines to process');
 
     for (int i = 0; i < lines.length; i++) {
       final line = lines[i].trim();
 
       // Skip comment lines
       if (line.startsWith('#') || line.startsWith('//')) {
-        print('[AddConfigs] Skipping comment line $i');
+        debugPrint('[AddConfigs] Skipping comment line $i');
         continue;
       }
 
       // Only process valid protocol prefixes
       if (!_isValidConfigLine(line)) {
-        print(
+        debugPrint(
             '[AddConfigs] Skipping non-config line $i: ${line.substring(0, line.length > 30 ? 30 : line.length)}...');
         continue;
       }
 
       try {
-        print(
+        debugPrint(
             '[AddConfigs] Processing line $i: ${line.substring(0, line.length > 50 ? 50 : line.length)}...');
         final config = _buildConfig(line);
         configRepo.addConfig(config);
         addedCount++;
-        print('[AddConfigs] Successfully added: ${config.configName}');
+        debugPrint('[AddConfigs] Successfully added: ${config.configName}');
       } catch (e) {
         // Skip invalid lines
-        print('[AddConfigs] Failed to parse line $i: $e');
+        debugPrint('[AddConfigs] Failed to parse line $i: $e');
         continue;
       }
     }
 
-    print('[AddConfigs] Total configs added: $addedCount');
+    debugPrint('[AddConfigs] Total configs added: $addedCount');
 
     if (addedCount > 0) {
       // Save all configs

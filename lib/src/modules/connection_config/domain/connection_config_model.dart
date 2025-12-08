@@ -14,7 +14,13 @@ class ConnectionConfigModel {
           'At least one of rawJsonConfig or configLink must be provided',
         ) {
     if (configLink != null) {
-      _parsedConfig = ProxyUrlParser.parse(configLink!);
+      // Try to parse with proxy_url_parser, but don't fail if unsupported
+      try {
+        _parsedConfig = ProxyUrlParser.parse(configLink!);
+      } catch (e) {
+        // Unsupported protocol (hy2, tuic, wg, etc.) - store raw link only
+        _parsedConfig = null;
+      }
     }
   }
 
@@ -31,13 +37,27 @@ class ConnectionConfigModel {
   int? ping;
 
   /// For parsed config from [configLink]
-  late final ProtocolConfigBase? _parsedConfig;
+  ProtocolConfigBase? _parsedConfig;
 
   /// Get the parsed config if available
   ProtocolConfigBase? get parsedConfig => _parsedConfig;
 
   String get configName {
-    if (_parsedConfig != null) return _parsedConfig.remark;
+    if (_parsedConfig != null) return _parsedConfig!.remark;
+
+    // Try to extract name from URL fragment for unsupported protocols
+    if (configLink != null) {
+      try {
+        final uri =
+            Uri.parse(configLink!.replaceFirst(RegExp(r'^\w+://'), 'https://'));
+        if (uri.hasFragment && uri.fragment.isNotEmpty) {
+          return Uri.decodeComponent(uri.fragment.split('&&')[0]);
+        }
+      } catch (e) {
+        // Ignore
+      }
+    }
+
     try {
       return rawJsonConfig!['remark'] ??
           rawJsonConfig!['outbounds']?[0]?['remark'] ??
@@ -50,8 +70,20 @@ class ConnectionConfigModel {
   /// Get protocol type (VLESS, VMess, Trojan, Shadowsocks, etc.)
   String get protocolType {
     if (_parsedConfig != null) {
-      return _parsedConfig.runtimeType.toString().replaceAll('Config', '');
+      return _parsedConfig!.runtimeType
+          .toString()
+          .replaceAll('Config', '')
+          .replaceAll('Protocol', '');
     }
+
+    // Extract protocol from link for unsupported protocols
+    if (configLink != null) {
+      final match = RegExp(r'^(\w+)://').firstMatch(configLink!);
+      if (match != null) {
+        return match.group(1)!.toUpperCase();
+      }
+    }
+
     try {
       final protocol = rawJsonConfig!['outbounds']?[0]?['protocol'];
       if (protocol != null) {
@@ -118,13 +150,17 @@ class ConnectionConfigModel {
         case CoreNames.singbox:
         case CoreNames.v2ray:
           config = ProxyUrlParser.injectToConfig(
-              _baseConfig, _parsedConfig.toXrayJson(allowInsecure: true))
+              _baseConfig, _parsedConfig!.toXrayJson(allowInsecure: true))
             ..['outbounds'][0]['tag'] = 'proxy';
         case CoreNames.outline:
-          config = _parsedConfig.toOutlineJson();
+          config = _parsedConfig!.toOutlineJson();
       }
-    } else {
+    } else if (rawJsonConfig != null) {
       config = rawJsonConfig!;
+    } else {
+      // For unsupported protocols, return empty config
+      // The raw link is still stored and can be used by external cores
+      config = {'error': 'Unsupported protocol', 'link': configLink};
     }
 
     return jsonEncode(config);

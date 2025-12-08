@@ -37,7 +37,8 @@ class ProxyCoreConfig {
   }) : _vpnMode = true;
 
   bool get vpnMode => _vpnMode;
-  set parcelFileId(int id) => _parcelFileId = id;
+  int? get parcelFileId => _parcelFileId;
+  set parcelFileId(int? id) => _parcelFileId = id;
 
   StartCoreRequest toGrpcModel() {
     if (_vpnMode && (_parcelFileId == null || _parcelFileId == 0)) {

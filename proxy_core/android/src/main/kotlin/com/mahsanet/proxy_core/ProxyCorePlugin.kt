@@ -45,6 +45,9 @@ class ProxyCorePlugin :
 
         methodChannel?.setMethodCallHandler(this)
         eventChannel?.setStreamHandler(this)
+        
+        // Register SingBox plugin
+        SingBoxPlugin().onAttachedToEngine(binding)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {

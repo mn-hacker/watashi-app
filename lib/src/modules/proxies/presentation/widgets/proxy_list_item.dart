@@ -58,10 +58,10 @@ class ProxyListItem extends StatelessWidget {
           children: [
             // Ping indicator with background
             Container(
-              width: 48.w,
+              width: 52.w,
               height: 36.h,
               decoration: BoxDecoration(
-                color: ping != null && ping > 0
+                color: ping != null && ping > 0 && ping < 65000
                     ? pingColor.withOpacity(0.12)
                     : (isDarkMode
                         ? AppColors.darkItemsBackground
@@ -69,20 +69,7 @@ class ProxyListItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.r),
               ),
               alignment: Alignment.center,
-              child: ping != null && ping > 0
-                  ? Text(
-                      '$ping',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                        color: pingColor,
-                      ),
-                    )
-                  : Icon(
-                      ping == -1 ? Icons.close_rounded : Icons.schedule_rounded,
-                      size: 18.sp,
-                      color: ping == -1 ? AppColors.red : AppColors.textMuted,
-                    ),
+              child: _buildPingIndicator(ping, pingColor, isDarkMode),
             ),
             SizedBox(width: 14.w),
             // Selection indicator
@@ -132,11 +119,45 @@ class ProxyListItem extends StatelessWidget {
     );
   }
 
+  Widget _buildPingIndicator(int? ping, Color pingColor, bool isDarkMode) {
+    // Failed ping (timeout or error)
+    if (ping == null) {
+      return Icon(
+        Icons.schedule_rounded,
+        size: 18.sp,
+        color: AppColors.textMuted,
+      );
+    }
+
+    // Failed ping (negative = error, >= 65000 = timeout like Hiddify)
+    if (ping < 0 || ping >= 65000) {
+      return Text(
+        '×',
+        style: TextStyle(
+          fontSize: 18.sp,
+          fontWeight: FontWeight.bold,
+          color: AppColors.red,
+        ),
+      );
+    }
+
+    // Valid ping
+    return Text(
+      '$ping',
+      style: TextStyle(
+        fontSize: 13.sp,
+        fontWeight: FontWeight.w700,
+        color: pingColor,
+      ),
+    );
+  }
+
   Color _getPingColor(int? ping) {
-    if (ping == null || ping <= 0) return AppColors.textMuted;
-    if (ping < 150) return AppColors.green;
-    if (ping < 300) return AppColors.orange;
-    return AppColors.red;
+    if (ping == null || ping <= 0 || ping >= 65000) return AppColors.textMuted;
+    if (ping < 300) return AppColors.green; // Good
+    if (ping < 600) return Colors.yellow[700]!; // Medium
+    if (ping < 1000) return AppColors.orange; // Slow
+    return AppColors.red; // Very slow
   }
 
   void _showOptionsMenu(BuildContext context) {

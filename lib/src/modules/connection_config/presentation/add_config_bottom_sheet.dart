@@ -17,11 +17,20 @@ Future<void> showAddConfigBottomSheet(BuildContext context) {
   );
 }
 
-class AddConfigBottomSheet extends ConsumerWidget {
+class AddConfigBottomSheet extends ConsumerStatefulWidget {
   const AddConfigBottomSheet({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AddConfigBottomSheet> createState() =>
+      _AddConfigBottomSheetState();
+}
+
+class _AddConfigBottomSheetState extends ConsumerState<AddConfigBottomSheet> {
+  bool _isLoading = false;
+  String _loadingMessage = '';
+
+  @override
+  Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final l10n = context.l10n;
 
@@ -34,62 +43,105 @@ class AddConfigBottomSheet extends ConsumerWidget {
         ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              margin: EdgeInsets.only(top: 12.h),
-              width: 40.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? AppColors.darkItemsBackground
-                    : AppColors.lightGrey,
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            // Top row with QR and Clipboard options
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _OptionCard(
-                      icon: Icons.qr_code_scanner,
-                      label: l10n.scanQRCode,
-                      isDarkMode: isDarkMode,
-                      onTap: () => _onScanQRCode(context),
-                    ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: _OptionCard(
-                      icon: Icons.content_paste,
-                      label: l10n.addFromClipboard,
-                      isDarkMode: isDarkMode,
-                      onTap: () => _onAddFromClipboard(context, ref),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16.h),
-            // Manual add option
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: _OptionButton(
-                icon: Icons.add,
-                label: l10n.manualAdd,
-                isDarkMode: isDarkMode,
-                onTap: () => _onManualAdd(context),
-              ),
-            ),
-            SizedBox(height: 24.h),
-          ],
+        child: AnimatedCrossFade(
+          duration: const Duration(milliseconds: 250),
+          crossFadeState:
+              _isLoading ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: _buildLoadingState(isDarkMode, l10n),
+          secondChild: _buildButtonsState(isDarkMode, l10n),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoadingState(bool isDarkMode, dynamic l10n) {
+    return Container(
+      padding: EdgeInsets.all(32.w),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 16.h),
+          CircularProgressIndicator(
+            color: AppColors.accent,
+          ),
+          SizedBox(height: 16.h),
+          Text(
+            _loadingMessage.isNotEmpty ? _loadingMessage : 'Adding config...',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: isDarkMode
+                  ? AppColors.grey.shade400
+                  : AppColors.grey.shade600,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          TextButton(
+            onPressed: () {
+              setState(() => _isLoading = false);
+            },
+            child: Text('Cancel'),
+          ),
+          SizedBox(height: 16.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButtonsState(bool isDarkMode, dynamic l10n) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Handle bar
+        Container(
+          margin: EdgeInsets.only(top: 12.h),
+          width: 40.w,
+          height: 4.h,
+          decoration: BoxDecoration(
+            color: isDarkMode
+                ? AppColors.darkItemsBackground
+                : AppColors.lightGrey,
+            borderRadius: BorderRadius.circular(2.r),
+          ),
+        ),
+        SizedBox(height: 20.h),
+        // Top row with QR and Clipboard options
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Row(
+            children: [
+              Expanded(
+                child: _OptionCard(
+                  icon: Icons.qr_code_scanner,
+                  label: l10n.scanQRCode,
+                  isDarkMode: isDarkMode,
+                  onTap: () => _onScanQRCode(context),
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: _OptionCard(
+                  icon: Icons.content_paste,
+                  label: l10n.addFromClipboard,
+                  isDarkMode: isDarkMode,
+                  onTap: () => _onAddFromClipboard(context),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+        // Manual add option
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: _OptionButton(
+            icon: Icons.add,
+            label: l10n.manualAdd,
+            isDarkMode: isDarkMode,
+            onTap: () => _onManualAdd(context),
+          ),
+        ),
+        SizedBox(height: 24.h),
+      ],
     );
   }
 
@@ -100,7 +152,7 @@ class AddConfigBottomSheet extends ConsumerWidget {
     );
   }
 
-  Future<void> _onAddFromClipboard(BuildContext context, WidgetRef ref) async {
+  Future<void> _onAddFromClipboard(BuildContext context) async {
     final l10n = context.l10n;
     final scaffoldMessenger = ScaffoldMessenger.of(context);
 
@@ -116,23 +168,42 @@ class AddConfigBottomSheet extends ConsumerWidget {
       }
 
       final configText = clipboardData.text!.trim();
+
+      // Show loading state
+      setState(() {
+        _isLoading = true;
+        _loadingMessage = 'Parsing config...';
+      });
+
+      // Small delay to show the animation
+      await Future.delayed(const Duration(milliseconds: 100));
+
       final controller = ref.read(connectionConfigControllerProvider.notifier);
 
       try {
         controller.updateInput(configText);
-        Navigator.of(context).pop();
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text(l10n.configAddedSuccess)),
-        );
+
+        if (mounted) {
+          Navigator.of(context).pop();
+          scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text(l10n.configAddedSuccess)),
+          );
+        }
       } catch (e) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text(l10n.noConfigInClipboard)),
-        );
+        if (mounted) {
+          setState(() => _isLoading = false);
+          scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text(l10n.noConfigInClipboard)),
+          );
+        }
       }
     } catch (e) {
-      scaffoldMessenger.showSnackBar(
-        SnackBar(content: Text(l10n.clipboardEmpty)),
-      );
+      if (mounted) {
+        setState(() => _isLoading = false);
+        scaffoldMessenger.showSnackBar(
+          SnackBar(content: Text(l10n.clipboardEmpty)),
+        );
+      }
     }
   }
 

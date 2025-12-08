@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:proxy_core/constants/core_names.dart';
 import 'package:proxy_core/constants/grpc_channel_config.dart';
 import 'package:proxy_core/ffi/ffi.dart';
 import 'package:proxy_core/gen/bindings/ProxyCoreService.pbgrpc.dart';
+import 'package:proxy_core/method_channel/singbox_channel.dart';
 import 'package:proxy_core/method_channel/vpn_mode_channel.dart';
 import 'package:proxy_core/models/proxy_core_config.dart';
 import 'package:proxy_core/models/proxy_core_exception.dart';
@@ -56,6 +58,11 @@ class ProxyCoreBaseImpl
 
   @override
   Future<bool> get isRunning => _executeGrpcOperation(() async {
+        // Check if SingBox is running
+        if (await SingBoxChannel.isRunning()) {
+          return true;
+        }
+        // Check if Xray is running
         var val = (await _grpcClient.isCoreRunning(Empty())).message;
         return val;
       });
@@ -92,7 +99,14 @@ class ProxyCoreBaseImpl
 
       final finalConfig = await prepareConfigForVpnIfNeeded(config);
 
-      await _grpcClient.startCore(finalConfig.toGrpcModel());
+      // Route SingBox through its dedicated channel
+      if (finalConfig.core == CoreNames.singbox) {
+        await _startSingBox(finalConfig);
+      } else {
+        // Use gRPC for Xray and other cores
+        await _grpcClient.startCore(finalConfig.toGrpcModel());
+      }
+
       await _onCoreStateChanged?.call(await isRunning);
 
       // Start VPN status polling if in VPN mode
@@ -100,11 +114,24 @@ class ProxyCoreBaseImpl
     });
   }
 
+  /// Start SingBox core via method channel
+  Future<void> _startSingBox(ProxyCoreConfig config) async {
+    final success =
+        await SingBoxChannel.start(config, config.parcelFileId ?? 0);
+    if (!success) {
+      throw ProxyCoreException.message('Failed to start SingBox core');
+    }
+  }
+
   @override
   Future<void> stop() async {
     await _executeGrpcOperation(() async {
       await stopVPN();
+
+      // Stop both cores (one will be no-op if not running)
+      await SingBoxChannel.stop();
       await _grpcClient.stopCore(Empty());
+
       await _onCoreStateChanged?.call(await isRunning);
 
       if (_shouldUseNotifications) {

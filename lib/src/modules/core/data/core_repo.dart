@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:proxy_core/constants/core_names.dart';
@@ -37,9 +39,9 @@ class CoreRepo {
       ConnectionMode mode, ConnectionConfigModel config, CoreNames core) async {
     try {
       // Debug: Log which mode is being used
-      print('CoreRepo.start: Starting with mode = ${mode.name}');
+      debugPrint('CoreRepo.start: Starting with mode = ${mode.name}');
       final coreConfig = await _buildCoreConfig(mode, config, core);
-      print('CoreRepo.start: Config vpnMode = ${coreConfig.vpnMode}');
+      debugPrint('CoreRepo.start: Config vpnMode = ${coreConfig.vpnMode}');
       await ProxyCore.ins.start(coreConfig);
     } catch (e) {
       await stop();

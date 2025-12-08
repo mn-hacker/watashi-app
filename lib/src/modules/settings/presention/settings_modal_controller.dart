@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proxy_core/constants/core_names.dart';
 import 'package:watashi/src/modules/connection/domain/connection_mode.dart';
@@ -30,11 +31,11 @@ class SettingsModalController extends Notifier<SettingsModel> {
   }
 
   void updateSettings() {
-    print(
+    debugPrint(
         'SettingsModalController.updateSettings: connectionMode = ${state.connectionMode.name}');
     ref.read(settingsRepoProvider).settings = state;
     ref.read(connectionModeProvider.notifier).state = state.connectionMode;
-    print(
+    debugPrint(
         'SettingsModalController.updateSettings: connectionModeProvider updated');
   }
 

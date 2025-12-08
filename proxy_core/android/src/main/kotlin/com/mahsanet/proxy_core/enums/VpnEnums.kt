@@ -4,11 +4,15 @@ enum class VpnMethods(val methodName: String) {
     PREPARE("prepare"),
     START_VPN("startVPN"),
     STOP_VPN("stopVPN"),
-    IS_VPN_RUNNING("isVPNRunning");
+    IS_VPN_RUNNING("isVPNRunning"),
+    SET_CORE_TYPE("setCoreType"),
+    SET_CONFIG("setConfig");
 
     companion object {
         const val TAG = "ProxyCoreVpnService"
         const val EXTRA_RESULT_RECEIVER = "proxy_core.EXTRA_RESULT_RECEIVER"
+        const val EXTRA_CORE_TYPE = "proxy_core.EXTRA_CORE_TYPE"
+        const val EXTRA_CONFIG = "proxy_core.EXTRA_CONFIG"
         const val VPN_METHOD_CHANNEL = "proxy_core/vpn"
 
         // VPN Client IP addresses
@@ -26,6 +30,20 @@ enum class VpnMethods(val methodName: String) {
             return methodName?.let {
                 values().find { it.methodName == methodName }
             }
+        }
+    }
+}
+
+/**
+ * Supported VPN core types
+ */
+enum class CoreType(val value: String) {
+    XRAY("xray"),
+    SINGBOX("singbox");
+
+    companion object {
+        fun fromValue(value: String?): CoreType {
+            return values().find { it.value == value?.lowercase() } ?: XRAY
         }
     }
 }
