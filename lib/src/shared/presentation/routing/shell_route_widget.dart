@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
@@ -73,8 +74,9 @@ class _BottomNavShellState extends State<BottomNavShell> {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         final shouldPop = await _onWillPop();
-        if (shouldPop && context.mounted) {
-          Navigator.of(context).pop();
+        if (shouldPop) {
+          // Use SystemNavigator.pop() to properly exit the app
+          SystemNavigator.pop();
         }
       },
       child: Scaffold(

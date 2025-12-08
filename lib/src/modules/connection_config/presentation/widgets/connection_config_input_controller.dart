@@ -15,14 +15,22 @@ final connectionConfigControllerProvider = NotifierProvider<
 class ConnectionConfigInputController
     extends Notifier<ConnectionConfigInputState> {
   late SharedPrefsRepo _sharedPrefsRepo;
+  bool _hasLoadedConfigs = false;
 
   @override
   ConnectionConfigInputState build() {
-    final configRepo = ref.watch(connectionConfigRepoProvider);
+    // Use ref.read instead of ref.watch to avoid infinite rebuild loop
+    final configRepo = ref.read(connectionConfigRepoProvider);
     final currentConfig = configRepo.activeConfig?.asStringValue;
     _sharedPrefsRepo = ref.read(sharedPrefsRepoProvider);
     final coreStatus = ref.watch(isCoreRunningProvider).value ?? false;
-    _loadSavedConfigs();
+
+    // Only load saved configs once on initial build
+    if (!_hasLoadedConfigs) {
+      _hasLoadedConfigs = true;
+      _loadSavedConfigs();
+    }
+
     return ConnectionConfigInputState(
         input: currentConfig ?? '', isDisabled: coreStatus);
   }
