@@ -93,7 +93,7 @@ class SingBoxPlatformInterface(
             
             override fun exchange(ctx: ExchangeContext?, message: ByteArray?) {
                 // Not supported in simple mode
-                ctx?.errorCode(1, "Not supported")
+                ctx?.errorCode(1)
             }
         }
     }
