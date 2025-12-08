@@ -51,6 +51,25 @@ class SingBoxChannel {
     }
   }
 
+  /// Get logs from SingBox
+  static Future<String> getLogs() async {
+    try {
+      final result = await _channel.invokeMethod<String>('getLogs');
+      return result ?? '';
+    } on PlatformException {
+      return '';
+    }
+  }
+
+  /// Clear SingBox logs
+  static Future<void> clearLogs() async {
+    try {
+      await _channel.invokeMethod('clearLogs');
+    } on PlatformException {
+      // Ignore errors
+    }
+  }
+
   /// Convert Xray/internal config format to SingBox JSON format
   ///
   /// This is a basic conversion that creates a minimal SingBox config.

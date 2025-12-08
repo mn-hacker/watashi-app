@@ -142,10 +142,9 @@ class ConnectionConfigInputController
       // SSH
       'ssh://',
 
-      // SOCKS/HTTP
+      // SOCKS (not HTTP as it conflicts with subscription URL detection)
       'socks://',
       'socks5://',
-      'http://',
 
       // JSON config
       '{',
@@ -211,28 +210,71 @@ class ConnectionConfigInputController
 
       debugPrint('[Subscription] Content length: ${content.length}');
       debugPrint(
-          '[Subscription] Content preview: ${content.substring(0, content.length > 100 ? 100 : content.length)}...');
+          '[Subscription] Content preview: ${content.substring(0, content.length > 200 ? 200 : content.length)}');
 
-      // Try to decode as base64
+      // Determine if content is base64 encoded
+      // If content starts with protocol prefixes or #, it's NOT base64
       String decodedContent;
-      try {
-        // Fix base64 padding if needed
-        String base64Content = content.trim();
-        // Remove any whitespace/newlines within base64
-        base64Content = base64Content.replaceAll(RegExp(r'\s'), '');
-        // Add padding if necessary
-        while (base64Content.length % 4 != 0) {
-          base64Content += '=';
-        }
-        decodedContent = utf8.decode(base64.decode(base64Content));
-        debugPrint('[Subscription] Base64 decoded successfully');
+      final trimmedContent = content.trim();
+
+      final plainTextIndicators = [
+        'vless://',
+        'vmess://',
+        'trojan://',
+        'ss://',
+        'ssr://',
+        'hysteria://',
+        'hysteria2://',
+        'hy://',
+        'hy2://',
+        'tuic://',
+        'wireguard://',
+        'wg://',
+        'warp://',
+        'ssh://',
+        'socks://',
+        'socks5://',
+        'http://',
+        '#',
+        '//'
+      ];
+
+      final isPlainText = plainTextIndicators.any((prefix) =>
+          trimmedContent.toLowerCase().startsWith(prefix.toLowerCase()));
+
+      if (isPlainText) {
         debugPrint(
-            '[Subscription] Decoded preview: ${decodedContent.substring(0, decodedContent.length > 200 ? 200 : decodedContent.length)}...');
-      } catch (e) {
-        // Not base64, use as-is
-        debugPrint('[Subscription] Not base64, using raw content: $e');
+            '[Subscription] Content is plain text (starts with protocol prefix)');
         decodedContent = content;
+      } else {
+        // Try to decode as base64
+        try {
+          // Fix base64 padding if needed
+          String base64Content = content.trim();
+          // Remove any whitespace/newlines within base64
+          base64Content = base64Content.replaceAll(RegExp(r'\s'), '');
+          // Add padding if necessary
+          while (base64Content.length % 4 != 0) {
+            base64Content += '=';
+          }
+          decodedContent = utf8.decode(base64.decode(base64Content));
+          debugPrint('[Subscription] Base64 decoded successfully');
+          debugPrint(
+              '[Subscription] Decoded preview: ${decodedContent.substring(0, decodedContent.length > 200 ? 200 : decodedContent.length)}');
+        } catch (e) {
+          // Not base64, use as-is
+          debugPrint(
+              '[Subscription] Base64 decode failed, using raw content: $e');
+          decodedContent = content;
+        }
       }
+
+      // Normalize line endings and parse configs
+      decodedContent =
+          decodedContent.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
+
+      debugPrint(
+          '[Subscription] Calling _addMultipleConfigs with ${decodedContent.split('\n').length} potential lines');
 
       // Parse and add configs
       _addMultipleConfigs(decodedContent);
@@ -367,6 +409,16 @@ class ConnectionConfigInputController
     } else {
       state = state.copyWith(input: '');
     }
+  }
+
+  /// Delete all configs
+  void deleteAllConfigs() {
+    final configRepo = ref.read(connectionConfigRepoProvider);
+    configRepo.clearAllConfigs();
+    _sharedPrefsRepo.saveAllConfigs([]);
+    _sharedPrefsRepo.saveActiveConfigIndex(-1);
+    _sharedPrefsRepo.saveAutoSelectEnabled(false);
+    state = state.copyWith(input: '');
   }
 
   /// Update an existing config

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/src/l10n/l10n.dart';
-import 'package:watashi/src/modules/settings/presention/settings_modal_widget.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/constants/app_icons.dart';
 import 'package:watashi/src/shared/presentation/routing/app_router.dart';
@@ -91,7 +90,7 @@ class _FullScreenMenu extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AppIcons.logo(height: 30),
+                              AppIcons.logo(height: 30, isDarkMode: isDarkMode),
                               SizedBox(height: 8.h),
                               Text(
                                 context.l10n.mainSettings,
@@ -112,7 +111,9 @@ class _FullScreenMenu extends ConsumerWidget {
                           title: context.l10n.settings,
                           onTap: () {
                             Navigator.pop(context);
-                            showSettingsModal(context);
+                            ref
+                                .read(goRouterProvider)
+                                .goNamed(settingsScreenName);
                           },
                         ),
                         _DrawerMenuItem(

@@ -37,15 +37,34 @@ class ProxiesScreen extends ConsumerWidget {
         ),
         backgroundColor: isDarkMode ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.swap_vert_rounded,
-            color: isDarkMode
-                ? AppColors.darkTextSecondary
-                : AppColors.textSecondary,
-          ),
-          tooltip: context.l10n.sortByPing,
-          onPressed: () => _sortByPing(ref),
+        leadingWidth: 100.w,
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(width: 8.w),
+            IconButton(
+              icon: Icon(
+                Icons.swap_vert_rounded,
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
+              tooltip: context.l10n.sortByPing,
+              onPressed: () => _sortByPing(ref),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.delete_sweep_rounded,
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
+              tooltip: 'Delete All',
+              onPressed: configs.isEmpty
+                  ? null
+                  : () => _showDeleteAllDialog(context, ref, isDarkMode),
+            ),
+          ],
         ),
         actions: [
           IconButton(
@@ -195,5 +214,50 @@ class ProxiesScreen extends ConsumerWidget {
   void _editConfig(
       BuildContext context, WidgetRef ref, ConnectionConfigModel config) {
     showConfigEditor(context, config);
+  }
+
+  void _showDeleteAllDialog(
+      BuildContext context, WidgetRef ref, bool isDarkMode) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.white,
+        title: Text(
+          'Delete All Configs?',
+          style: TextStyle(
+            color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+          ),
+        ),
+        content: Text(
+          'This will remove all your proxy configurations. This action cannot be undone.',
+          style: TextStyle(
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ref
+                  .read(connectionConfigControllerProvider.notifier)
+                  .deleteAllConfigs();
+            },
+            child: Text(
+              'Delete All',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

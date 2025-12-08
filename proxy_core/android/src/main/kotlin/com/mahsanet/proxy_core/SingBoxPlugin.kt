@@ -12,11 +12,6 @@ import io.flutter.plugin.common.MethodChannel
  */
 class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
-    companion object {
-        private const val TAG = "SingBoxPlugin"
-        private const val CHANNEL_NAME = "proxy_core/singbox"
-    }
-
     private var applicationContext: Context? = null
     private var methodChannel: MethodChannel? = null
     private var singBoxService: SingBoxService? = null
@@ -42,6 +37,8 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
             "start" -> handleStart(call, result)
             "stop" -> handleStop(result)
             "isRunning" -> handleIsRunning(result)
+            "getLogs" -> handleGetLogs(result)
+            "clearLogs" -> handleClearLogs(result)
             else -> result.notImplemented()
         }
     }
@@ -57,6 +54,7 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
             }
 
             Log.d(TAG, "Starting SingBox with tunFd: $tunFd")
+            appendLog("[SingBox] Starting with tunFd: $tunFd")
 
             // Create service if needed
             if (singBoxService == null) {
@@ -75,10 +73,16 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
             // Start with new config
             val success = singBoxService?.start(config, tunFd) ?: false
+            if (success) {
+                appendLog("[SingBox] Started successfully")
+            } else {
+                appendLog("[SingBox] Failed to start")
+            }
             result.success(success)
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start SingBox", e)
+            appendLog("[SingBox] Error: ${e.message}")
             result.error("START_FAILED", e.message, null)
         }
     }
@@ -86,10 +90,13 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private fun handleStop(result: MethodChannel.Result) {
         try {
             Log.d(TAG, "Stopping SingBox")
+            appendLog("[SingBox] Stopping...")
             singBoxService?.stop()
+            appendLog("[SingBox] Stopped")
             result.success(null)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to stop SingBox", e)
+            appendLog("[SingBox] Stop error: ${e.message}")
             result.error("STOP_FAILED", e.message, null)
         }
     }
@@ -100,6 +107,32 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
             result.success(running)
         } catch (e: Exception) {
             result.success(false)
+        }
+    }
+
+    private fun handleGetLogs(result: MethodChannel.Result) {
+        synchronized(logBuffer) {
+            result.success(logBuffer.toString())
+        }
+    }
+
+    private fun handleClearLogs(result: MethodChannel.Result) {
+        synchronized(logBuffer) {
+            logBuffer.clear()
+        }
+        result.success(null)
+    }
+
+    companion object {
+        private const val TAG = "SingBoxPlugin"
+        private const val CHANNEL_NAME = "proxy_core/singbox"
+        private val logBuffer = StringBuilder()
+
+        fun appendLog(message: String) {
+            synchronized(logBuffer) {
+                logBuffer.append(message).append("\n")
+            }
+            Log.d(TAG, message)
         }
     }
 }

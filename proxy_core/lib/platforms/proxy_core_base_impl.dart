@@ -150,11 +150,22 @@ class ProxyCoreBaseImpl
 
   @override
   Future<LogResponse> fetchLogs() => _executeGrpcOperation(() async {
-        return await _grpcClient.fetchLogs(Empty());
+        // Get Xray logs from gRPC
+        final xrayLogs = await _grpcClient.fetchLogs(Empty());
+
+        // Get SingBox logs
+        final singBoxLogs = await SingBoxChannel.getLogs();
+
+        // Combine logs
+        if (singBoxLogs.isNotEmpty) {
+          return LogResponse(logs: '${xrayLogs.logs}\n$singBoxLogs');
+        }
+        return xrayLogs;
       });
 
   @override
   Future<Empty> clearLogs() => _executeGrpcOperation(() async {
+        await SingBoxChannel.clearLogs();
         return await _grpcClient.clearLogs(Empty());
       });
 

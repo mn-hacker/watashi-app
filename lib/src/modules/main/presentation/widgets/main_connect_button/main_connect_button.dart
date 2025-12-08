@@ -33,7 +33,7 @@ class MainConnectButton extends ConsumerStatefulWidget {
 }
 
 class _MainConnectButtonState extends ConsumerState<MainConnectButton>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // Constants
   static const _animationDuration = Duration(milliseconds: 200);
   static const _slidePadding = 5.0;
@@ -44,6 +44,10 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
   // Animation controllers
   late final AnimationController _controller;
   late final Animation<double> _animation;
+
+  // Chevron animation for swipe hint
+  late final AnimationController _chevronController;
+  late final Animation<double> _chevronAnimation;
 
   // Drag state
   double _dragPosition = 0.0;
@@ -58,7 +62,27 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
   void initState() {
     super.initState();
     _initializeAnimation();
+    _initializeChevronAnimation();
     _updateConnectionState(widget.isConnected);
+  }
+
+  void _initializeChevronAnimation() {
+    _chevronController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _chevronAnimation = Tween<double>(begin: 0.0, end: 12.0).animate(
+      CurvedAnimation(
+        parent: _chevronController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    // Start repeating animation when VPN is off
+    if (!widget.isConnected) {
+      _chevronController.repeat(reverse: true);
+    }
   }
 
   void _initializeAnimation() {
@@ -100,6 +124,11 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
       _updateConnectionState(widget.isConnected);
       if (!widget.isConnected) {
         _updateTimerConnectionStatus(false);
+        // Start chevron animation when disconnected
+        _chevronController.repeat(reverse: true);
+      } else {
+        // Stop chevron animation when connected
+        _chevronController.stop();
       }
     }
   }
@@ -107,6 +136,7 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
   @override
   void dispose() {
     _controller.dispose();
+    _chevronController.dispose();
     super.dispose();
   }
 
@@ -232,12 +262,24 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
       top: 0,
       bottom: 0,
       child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppIcons.chevronsRightLowContrast(),
-          ],
+        child: AnimatedBuilder(
+          animation: _chevronAnimation,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(_chevronAnimation.value, 0),
+              child: Opacity(
+                opacity: 0.6 + (0.4 * (1 - (_chevronAnimation.value / 12))),
+                child: child,
+              ),
+            );
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppIcons.chevronsRightLowContrast(),
+            ],
+          ),
         ),
       ),
     );

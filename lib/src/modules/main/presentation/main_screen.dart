@@ -25,17 +25,39 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isConnected = ref.watch(isCoreRunningProvider).valueOrNull ?? false;
+
+    // Determine color filter based on connection state and theme
+    ColorFilter? backgroundColorFilter;
+    double backgroundOpacity;
+
+    if (isConnected) {
+      // When VPN is connected - green tint
+      backgroundColorFilter = ColorFilter.mode(
+        AppColors.accent.withOpacity(0.3),
+        BlendMode.srcATop,
+      );
+      backgroundOpacity = isDarkMode ? 0.5 : 0.8;
+    } else if (isDarkMode) {
+      // Dark mode disconnected - light/white tint
+      backgroundColorFilter = const ColorFilter.mode(
+        Colors.white24,
+        BlendMode.srcATop,
+      );
+      backgroundOpacity = 0.15;
+    } else {
+      // Light mode disconnected - default grey
+      backgroundColorFilter = null;
+      backgroundOpacity = 1.0;
+    }
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.darkBackground : AppColors.white,
         image: DecorationImage(
           image: Assets.images.bg.image(fit: BoxFit.cover).image,
-          colorFilter: isDarkMode
-              ? const ColorFilter.mode(
-                  AppColors.darkBackground, BlendMode.darken)
-              : null,
-          opacity: isDarkMode ? 0.3 : 1.0,
+          colorFilter: backgroundColorFilter,
+          opacity: backgroundOpacity,
         ),
       ),
       child: Scaffold(
@@ -44,28 +66,33 @@ class MainScreen extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
-          title: Padding(
-            padding: EdgeInsets.only(left: 12.w),
-            child: AppIcons.logo(),
+          leadingWidth: 100.w,
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(width: 8.w),
+              IconButton(
+                iconSize: 26,
+                icon: Icon(
+                  Icons.add_circle_outline_rounded,
+                  color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+                ),
+                onPressed: () => showAddConfigBottomSheet(context),
+              ),
+              IconButton(
+                iconSize: 26,
+                icon: Icon(
+                  Icons.tune_rounded,
+                  color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+                ),
+                tooltip: 'Quick Settings',
+                onPressed: () => showSettingsModal(context),
+              ),
+            ],
           ),
+          title: AppIcons.logo(isDarkMode: isDarkMode),
+          centerTitle: true,
           actions: [
-            IconButton(
-              iconSize: 26,
-              icon: Icon(
-                Icons.tune_rounded,
-                color: isDarkMode ? AppColors.white : AppColors.textPrimary,
-              ),
-              tooltip: 'Quick Settings',
-              onPressed: () => showSettingsModal(context),
-            ),
-            IconButton(
-              iconSize: 26,
-              icon: Icon(
-                Icons.add_circle_outline_rounded,
-                color: isDarkMode ? AppColors.white : AppColors.textPrimary,
-              ),
-              onPressed: () => showAddConfigBottomSheet(context),
-            ),
             Padding(
               padding: EdgeInsets.only(right: 8.w),
               child: IconButton(

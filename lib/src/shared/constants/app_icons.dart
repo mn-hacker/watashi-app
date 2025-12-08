@@ -26,15 +26,38 @@ final class AppIcons {
   // Image Asset Paths
   static const String ukFlagPath = 'assets/icons/uk.png';
 
-  // SVG Widgets with default sizes and colors
-  static SvgPicture logo({double height = 35}) {
-    SvgPicture.asset(
-      logoPath,
-      height: height,
-    );
-    return SvgPicture.asset(
-      Assets.images.logo,
-      height: height,
+  // Logo widget with theme support for "Watashi⚡VPN"
+  static Widget logo({double height = 35, bool isDarkMode = false}) {
+    final fontSize = height * 0.85;
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          fontSize: fontSize,
+          fontWeight: FontWeight.w700,
+          letterSpacing: -0.5,
+        ),
+        children: [
+          TextSpan(
+            text: 'Watashi',
+            style: TextStyle(
+              color: isDarkMode ? Colors.white : AppColors.textPrimary,
+            ),
+          ),
+          TextSpan(
+            text: '⚡',
+            style: TextStyle(
+              color: AppColors.accent,
+              fontSize: fontSize * 0.9,
+            ),
+          ),
+          TextSpan(
+            text: 'VPN',
+            style: TextStyle(
+              color: AppColors.accent,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

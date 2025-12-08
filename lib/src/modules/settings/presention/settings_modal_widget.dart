@@ -349,17 +349,21 @@ class _ActionButtons extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextButton(
-          onPressed: settingsController.restoreDefaults,
-          child: Text(
-            context.l10n.restoreDefaults,
-            style: AppTextStyles.settingsModalRestoreButton.copyWith(
-              color: isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.textSecondary,
+        Flexible(
+          child: TextButton(
+            onPressed: settingsController.restoreDefaults,
+            child: Text(
+              context.l10n.restoreDefaults,
+              style: AppTextStyles.settingsModalRestoreButton.copyWith(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
+        SizedBox(width: 8.w),
         ElevatedButton(
           onPressed: () {
             settingsController.updateSettings();

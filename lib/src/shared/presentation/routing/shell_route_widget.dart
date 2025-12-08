@@ -37,32 +37,32 @@ class BottomNavShell extends StatefulWidget {
 
 class _BottomNavShellState extends State<BottomNavShell> {
   int _currentIndex = 1; // Start on Home tab (index 1)
+  DateTime? _lastBackPress;
 
-  Future<bool> _onWillPop() async {
+  void _handleBackButton() {
     // If on Proxies tab, go back to Home tab
     if (_currentIndex == 0) {
       setState(() => _currentIndex = 1);
-      return false;
+      return;
     }
-    // If on Home tab, show exit confirmation
-    final shouldExit = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Exit App?'),
-        content: const Text('Are you sure you want to exit?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Exit'),
-          ),
-        ],
-      ),
-    );
-    return shouldExit ?? false;
+
+    // If on Home tab, check for double press to exit
+    final now = DateTime.now();
+    if (_lastBackPress == null ||
+        now.difference(_lastBackPress!) > const Duration(seconds: 2)) {
+      _lastBackPress = now;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Press back again to exit'),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Double press detected, exit app
+    SystemNavigator.pop();
   }
 
   @override
@@ -71,13 +71,9 @@ class _BottomNavShellState extends State<BottomNavShell> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        final shouldPop = await _onWillPop();
-        if (shouldPop) {
-          // Use SystemNavigator.pop() to properly exit the app
-          SystemNavigator.pop();
-        }
+        _handleBackButton();
       },
       child: Scaffold(
         body: IndexedStack(
@@ -110,13 +106,15 @@ class _BottomNavShellState extends State<BottomNavShell> {
                 children: [
                   // Proxies tab
                   _NavItem(
-                    icon: Icons.layers_rounded,
+                    icon: Icons.dns_rounded,
                     label: context.l10n.proxies,
                     isSelected: _currentIndex == 0,
                     onTap: () => setState(() => _currentIndex = 0),
                   ),
-                  // Home tab with power icon
-                  _NavItemWithCircle(
+                  // Home tab
+                  _NavItem(
+                    icon: Icons.home_rounded,
+                    label: context.l10n.home,
                     isSelected: _currentIndex == 1,
                     onTap: () => setState(() => _currentIndex = 1),
                   ),
@@ -146,117 +144,56 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final selectedColor = AppColors.accent;
     final unselectedColor =
         isDarkMode ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? (isDarkMode
-                  ? AppColors.accent.withOpacity(0.15)
-                  : AppColors.accent.withOpacity(0.1))
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(16.r),
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: AppColors.connectedGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.greenGlow.withOpacity(0.4),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
-              color: isSelected ? selectedColor : unselectedColor,
-              size: 24.sp,
+              color: isSelected ? AppColors.white : unselectedColor,
+              size: 22.sp,
             ),
-            SizedBox(height: 4.h),
+            SizedBox(width: 8.w),
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? selectedColor : unselectedColor,
-                fontSize: 12.sp,
+                color: isSelected ? AppColors.white : unselectedColor,
+                fontSize: 14.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _NavItemWithCircle extends StatelessWidget {
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _NavItemWithCircle({
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(
-              gradient: isSelected
-                  ? LinearGradient(
-                      colors: AppColors.connectedGradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                  : null,
-              color: isSelected
-                  ? null
-                  : (isDarkMode
-                      ? AppColors.darkItemsBackground
-                      : AppColors.lightGrey),
-              shape: BoxShape.circle,
-              boxShadow: isSelected
-                  ? [
-                      BoxShadow(
-                        color: AppColors.greenGlow,
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                      ),
-                    ]
-                  : null,
-            ),
-            child: Icon(
-              Icons.power_settings_new_rounded,
-              color: isSelected
-                  ? AppColors.white
-                  : (isDarkMode
-                      ? AppColors.darkTextSecondary
-                      : AppColors.textSecondary),
-              size: 26.sp,
-            ),
-          ),
-          SizedBox(height: 6.h),
-          Text(
-            context.l10n.home,
-            style: TextStyle(
-              color: isSelected
-                  ? AppColors.accent
-                  : (isDarkMode
-                      ? AppColors.darkTextSecondary
-                      : AppColors.textSecondary),
-              fontSize: 12.sp,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            ),
-          ),
-        ],
       ),
     );
   }
