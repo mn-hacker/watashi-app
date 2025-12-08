@@ -32,5 +32,21 @@
   "configAddress": "نشانی",
   "configPort": "پورت",
   "configUuid": "شناسه",
-  "saveChanges": "ذخیره تغییرات"
+  "saveChanges": "ذخیره تغییرات",
+  "customization": "سفارشی‌سازی",
+  "theme": "تم",
+  "language": "زبان",
+  "themeLight": "روشن",
+  "themeDark": "تیره",
+  "themeSystem": "سیستم",
+  "connectionMode": "حالت اتصال",
+  "connectionModeProxy": "پروکسی",
+  "connectionModeVpn": "VPN",
+  "coreType": "نوع هسته",
+  "confirm": "تایید",
+  "restoreDefaults": "بازگشت به پیش‌فرض",
+  "settings": "تنظیمات",
+  "logs": "گزارش‌ها",
+  "about": "درباره",
+  "mainSettings": "تنظیمات اصلی"
 }

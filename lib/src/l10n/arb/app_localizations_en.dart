@@ -109,4 +109,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveChanges => 'Save Changes';
+
+  @override
+  String get customization => 'Customization';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get connectionMode => 'Connection Mode';
+
+  @override
+  String get connectionModeProxy => 'Proxy';
+
+  @override
+  String get connectionModeVpn => 'VPN';
+
+  @override
+  String get coreType => 'Core Type';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get restoreDefaults => 'Restore to default';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get logs => 'Logs';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get mainSettings => 'Main Settings';
 }

@@ -17,6 +17,7 @@ import 'package:watashi/src/shared/constants/app_icons.dart';
 import 'package:watashi/src/shared/constants/app_text_styles.dart';
 import 'package:watashi/src/shared/presentation/routing/app_router.dart';
 import 'package:watashi/src/shared/utils/async_value_extensions.dart';
+import 'package:watashi/src/shared/widgets/full_screen_menu.dart';
 
 final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -42,7 +43,6 @@ class MainScreen extends ConsumerWidget {
       child: Scaffold(
         key: _scaffoldKey,
         backgroundColor: AppColors.transparent,
-        endDrawer: _MainDrawer(),
         appBar: AppBar(
           title: Padding(
             padding: EdgeInsets.only(left: 20.w),
@@ -68,7 +68,7 @@ class MainScreen extends ConsumerWidget {
                   size: 28,
                   color: isDarkMode ? AppColors.white : AppColors.black,
                 ),
-                onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+                onPressed: () => showFullScreenMenu(context),
               ),
             ),
           ],
@@ -187,128 +187,5 @@ class ConnectionButton extends ConsumerWidget {
           connectionMetaController.clear();
           mainController.disconnect();
         });
-  }
-}
-
-class _MainDrawer extends ConsumerWidget {
-  const _MainDrawer();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return Drawer(
-      backgroundColor: isDarkMode ? AppColors.darkSurface : AppColors.white,
-      child: SafeArea(
-        child: Column(
-          children: [
-            // Header
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? AppColors.darkCard
-                    : AppColors.lightGrey.withValues(alpha: 0.3),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppIcons.logo(height: 30),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Main Settings',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: isDarkMode
-                          ? AppColors.white.withValues(alpha: 0.7)
-                          : AppColors.black54,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10.h),
-            // Menu Items
-            _DrawerMenuItem(
-              icon: Icons.settings,
-              title: 'Settings',
-              onTap: () {
-                Navigator.pop(context);
-                showSettingsModal(context);
-              },
-            ),
-            _DrawerMenuItem(
-              icon: Icons.bug_report,
-              title: 'Logs',
-              onTap: () {
-                Navigator.pop(context);
-                ref.read(goRouterProvider).goNamed(logsScreenName);
-              },
-            ),
-            _DrawerMenuItem(
-              icon: Icons.info_outline,
-              title: 'About',
-              onTap: () {
-                Navigator.pop(context);
-                showAboutDialog(
-                  context: context,
-                  applicationName: 'Watashi VPN',
-                  applicationVersion: '1.0.0',
-                );
-              },
-            ),
-            const Spacer(),
-            // Version info
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Text(
-                'Watashi VPN v1.0.0',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: isDarkMode
-                      ? AppColors.white.withValues(alpha: 0.5)
-                      : AppColors.black54,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DrawerMenuItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final VoidCallback onTap;
-
-  const _DrawerMenuItem({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isDarkMode
-            ? AppColors.white.withValues(alpha: 0.8)
-            : AppColors.black87,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16.sp,
-          color: isDarkMode ? AppColors.white : AppColors.black,
-        ),
-      ),
-      onTap: onTap,
-    );
   }
 }

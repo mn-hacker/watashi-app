@@ -32,5 +32,21 @@
   "configAddress": "Адрес",
   "configPort": "Порт",
   "configUuid": "UUID",
-  "saveChanges": "Сохранить"
+  "saveChanges": "Сохранить",
+  "customization": "Настройки",
+  "theme": "Тема",
+  "language": "Язык",
+  "themeLight": "Светлая",
+  "themeDark": "Тёмная",
+  "themeSystem": "Системная",
+  "connectionMode": "Режим подключения",
+  "connectionModeProxy": "Прокси",
+  "connectionModeVpn": "VPN",
+  "coreType": "Тип ядра",
+  "confirm": "Подтвердить",
+  "restoreDefaults": "Сбросить настройки",
+  "settings": "Настройки",
+  "logs": "Логи",
+  "about": "О программе",
+  "mainSettings": "Основные настройки"
 }

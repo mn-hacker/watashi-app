@@ -109,4 +109,52 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get saveChanges => 'ذخیره تغییرات';
+
+  @override
+  String get customization => 'سفارشی‌سازی';
+
+  @override
+  String get theme => 'تم';
+
+  @override
+  String get language => 'زبان';
+
+  @override
+  String get themeLight => 'روشن';
+
+  @override
+  String get themeDark => 'تیره';
+
+  @override
+  String get themeSystem => 'سیستم';
+
+  @override
+  String get connectionMode => 'حالت اتصال';
+
+  @override
+  String get connectionModeProxy => 'پروکسی';
+
+  @override
+  String get connectionModeVpn => 'VPN';
+
+  @override
+  String get coreType => 'نوع هسته';
+
+  @override
+  String get confirm => 'تایید';
+
+  @override
+  String get restoreDefaults => 'بازگشت به پیش‌فرض';
+
+  @override
+  String get settings => 'تنظیمات';
+
+  @override
+  String get logs => 'گزارش‌ها';
+
+  @override
+  String get about => 'درباره';
+
+  @override
+  String get mainSettings => 'تنظیمات اصلی';
 }

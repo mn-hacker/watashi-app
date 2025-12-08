@@ -63,7 +63,7 @@ class _SettingsModal extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Customization',
+                      context.l10n.customization,
                       style: AppTextStyles.settingsModalTitle,
                     ),
                     IconButton(
@@ -121,18 +121,18 @@ class _ConnectionModeSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Specify which connection mode the app should connect in:',
+          context.l10n.connectionMode,
           style: AppTextStyles.settingsModalSectionTitle,
         ),
         SizedBox(height: 12.h),
         RadioOption<ConnectionMode>(
-          title: 'Proxy',
+          title: context.l10n.connectionModeProxy,
           groupValue: settings.connectionMode,
           value: ConnectionMode.proxy,
           onChanged: (value) => settingsController.updateConnectionMode(value!),
         ),
         RadioOption<ConnectionMode>(
-          title: 'VPN',
+          title: context.l10n.connectionModeVpn,
           groupValue: settings.connectionMode,
           value: ConnectionMode.vpn,
           onChanged: (value) => settingsController.updateConnectionMode(value!),
@@ -156,7 +156,7 @@ class _CoreTypeSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Specify which core the app should use:',
+          context.l10n.coreType,
           style: AppTextStyles.settingsModalSectionTitle,
         ),
         SizedBox(height: 12.h),
@@ -225,26 +225,26 @@ class _ThemeSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Theme',
+          context.l10n.theme,
           style: AppTextStyles.settingsModalSectionTitle,
         ),
         SizedBox(height: 12.h),
         RadioOption<ThemeMode>(
-          title: 'Light',
+          title: context.l10n.themeLight,
           groupValue: themeMode,
           value: ThemeMode.light,
           onChanged: (value) =>
               ref.read(themeModeProvider.notifier).setThemeMode(value!),
         ),
         RadioOption<ThemeMode>(
-          title: 'Dark',
+          title: context.l10n.themeDark,
           groupValue: themeMode,
           value: ThemeMode.dark,
           onChanged: (value) =>
               ref.read(themeModeProvider.notifier).setThemeMode(value!),
         ),
         RadioOption<ThemeMode>(
-          title: 'System',
+          title: context.l10n.themeSystem,
           groupValue: themeMode,
           value: ThemeMode.system,
           onChanged: (value) =>
@@ -266,7 +266,7 @@ class _LanguageSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Language',
+          context.l10n.language,
           style: AppTextStyles.settingsModalSectionTitle,
         ),
         SizedBox(height: 12.h),
@@ -296,7 +296,7 @@ class _ActionButtons extends ConsumerWidget {
         TextButton(
           onPressed: settingsController.restoreDefaults,
           child: Text(
-            'Restore to default',
+            context.l10n.restoreDefaults,
             style: AppTextStyles.settingsModalRestoreButton,
           ),
         ),
@@ -313,7 +313,7 @@ class _ActionButtons extends ConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
           ),
           child: Text(
-            'Confirm',
+            context.l10n.confirm,
             style: AppTextStyles.settingsModalConfirmButton,
           ),
         ),

@@ -32,5 +32,21 @@
   "configAddress": "Address",
   "configPort": "Port",
   "configUuid": "UUID",
-  "saveChanges": "Save Changes"
+  "saveChanges": "Save Changes",
+  "customization": "Customization",
+  "theme": "Theme",
+  "language": "Language",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
+  "connectionMode": "Connection Mode",
+  "connectionModeProxy": "Proxy",
+  "connectionModeVpn": "VPN",
+  "coreType": "Core Type",
+  "confirm": "Confirm",
+  "restoreDefaults": "Restore to default",
+  "settings": "Settings",
+  "logs": "Logs",
+  "about": "About",
+  "mainSettings": "Main Settings"
 }

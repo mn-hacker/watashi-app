@@ -6,13 +6,12 @@ import 'package:watashi/src/modules/connection_config/data/connection_config_rep
 import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
 import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
-import 'package:watashi/src/modules/core/data/core_repo.dart';
 import 'package:watashi/src/modules/proxies/presentation/config_editor_screen.dart';
 import 'package:watashi/src/modules/proxies/presentation/widgets/auto_select_item.dart';
 import 'package:watashi/src/modules/proxies/presentation/widgets/proxy_list_item.dart';
-import 'package:watashi/src/modules/proxies/presentation/widgets/service_not_running.dart';
 import 'package:watashi/src/modules/proxies/presentation/proxies_controller.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/widgets/full_screen_menu.dart';
 
 class ProxiesScreen extends ConsumerWidget {
   const ProxiesScreen({super.key});
@@ -20,7 +19,6 @@ class ProxiesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isConnected = ref.watch(isCoreRunningProvider).value ?? false;
     final configRepo = ref.watch(connectionConfigRepoProvider);
     final configs = configRepo.configs;
 
@@ -42,7 +40,7 @@ class ProxiesScreen extends ConsumerWidget {
             color: isDarkMode ? AppColors.white : AppColors.black,
           ),
           tooltip: context.l10n.sortByPing,
-          onPressed: isConnected ? () => _sortByPing(ref) : null,
+          onPressed: () => _sortByPing(ref),
         ),
         actions: [
           IconButton(
@@ -50,24 +48,18 @@ class ProxiesScreen extends ConsumerWidget {
               Icons.menu,
               color: isDarkMode ? AppColors.white : AppColors.black,
             ),
-            onPressed: () {
-              // Open drawer or menu
-            },
+            onPressed: () => showFullScreenMenu(context),
           ),
         ],
       ),
-      body: !isConnected
-          ? const ServiceNotRunningWidget()
-          : configs.isEmpty
-              ? _buildEmptyState(context, isDarkMode)
-              : _buildConfigList(context, ref, isDarkMode, configs, configRepo),
-      floatingActionButton: isConnected
-          ? FloatingActionButton(
-              backgroundColor: AppColors.accent,
-              onPressed: () => _refreshPing(ref),
-              child: Icon(Icons.bolt, color: AppColors.white),
-            )
-          : null,
+      body: configs.isEmpty
+          ? _buildEmptyState(context, isDarkMode)
+          : _buildConfigList(context, ref, isDarkMode, configs, configRepo),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.accent,
+        onPressed: () => _refreshPing(ref),
+        child: Icon(Icons.bolt, color: AppColors.white),
+      ),
     );
   }
 

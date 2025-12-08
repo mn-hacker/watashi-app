@@ -109,4 +109,52 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get saveChanges => 'Сохранить';
+
+  @override
+  String get customization => 'Настройки';
+
+  @override
+  String get theme => 'Тема';
+
+  @override
+  String get language => 'Язык';
+
+  @override
+  String get themeLight => 'Светлая';
+
+  @override
+  String get themeDark => 'Тёмная';
+
+  @override
+  String get themeSystem => 'Системная';
+
+  @override
+  String get connectionMode => 'Режим подключения';
+
+  @override
+  String get connectionModeProxy => 'Прокси';
+
+  @override
+  String get connectionModeVpn => 'VPN';
+
+  @override
+  String get coreType => 'Тип ядра';
+
+  @override
+  String get confirm => 'Подтвердить';
+
+  @override
+  String get restoreDefaults => 'Сбросить настройки';
+
+  @override
+  String get settings => 'Настройки';
+
+  @override
+  String get logs => 'Логи';
+
+  @override
+  String get about => 'О программе';
+
+  @override
+  String get mainSettings => 'Основные настройки';
 }
