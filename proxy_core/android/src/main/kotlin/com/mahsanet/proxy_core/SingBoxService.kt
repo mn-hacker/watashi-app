@@ -70,6 +70,7 @@ class SingBoxService(private val context: Context) {
 
 /**
  * Platform interface implementation for SingBox on Android
+ * Matches libbox v1.12.x PlatformInterface
  */
 class SingBoxPlatformInterface(
     private val context: Context,
@@ -78,6 +79,23 @@ class SingBoxPlatformInterface(
     
     companion object {
         private const val TAG = "SingBoxPlatform"
+    }
+    
+    // LocalDNSTransport implementation
+    override fun localDNSTransport(): LocalDNSTransport {
+        return object : LocalDNSTransport {
+            override fun raw(): Boolean = false
+            
+            override fun lookup(ctx: ExchangeContext?, network: String?, domain: String?) {
+                // Simple lookup - set empty result
+                ctx?.success("")
+            }
+            
+            override fun exchange(ctx: ExchangeContext?, message: ByteArray?) {
+                // Not supported in simple mode
+                ctx?.errorCode(1, "Not supported")
+            }
+        }
     }
     
     override fun autoDetectInterfaceControl(fd: Int) {
@@ -131,8 +149,6 @@ class SingBoxPlatformInterface(
     override fun writeLog(message: String?) {
         Log.d(TAG, "SingBox: $message")
     }
-    
-    override fun usePlatformDefaultInterfaceMonitor(): Boolean = false
     
     override fun startDefaultInterfaceMonitor(listener: InterfaceUpdateListener?) {}
     
