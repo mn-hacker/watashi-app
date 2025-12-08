@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:watashi/src/modules/settings/data/settings_repo.dart';
 import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 enum ConnectionMode {
@@ -18,6 +19,9 @@ enum ConnectionMode {
   ConnectionMode get getToggle => switch (this) { proxy => vpn, vpn => proxy };
 }
 
-final connectionModeProvider =
-// Just returning proxy mode as the default mode
-    StateProvider<ConnectionMode>((ref) => ConnectionMode.vpn);
+/// Connection mode provider that reads initial value from settings
+final connectionModeProvider = StateProvider<ConnectionMode>((ref) {
+  // Read initial value from settings
+  final settings = ref.read(settingsRepoProvider).settings;
+  return settings.connectionMode;
+});

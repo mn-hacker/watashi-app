@@ -80,10 +80,10 @@ class ProxyCoreBaseImpl
 
     await _start(config);
 
-    if (_shouldUseNotifications) {
-      await _notifService.showActiveNotification(
-        config.vpnMode ? "VPN" : "Proxy",
-      );
+    // Only show notification in Proxy mode
+    // VPN mode already has a notification from native VpnService
+    if (_shouldUseNotifications && !config.vpnMode) {
+      await _notifService.showActiveNotification("Proxy");
     }
   }
 
