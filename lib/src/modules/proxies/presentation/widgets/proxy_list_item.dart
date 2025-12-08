@@ -25,55 +25,76 @@ class ProxyListItem extends StatelessWidget {
     final ping = config.ping;
     final pingColor = _getPingColor(ping);
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      onLongPress: onEdit, // Open config editor on long-press
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
-        margin: EdgeInsets.only(bottom: 8.h),
+      onLongPress: onEdit,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: isDarkMode ? AppColors.darkCard : AppColors.grey.shade50,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: isActive
-                ? AppColors.accent
-                : (isDarkMode
-                    ? AppColors.grey.shade700
-                    : AppColors.grey.shade300),
-            width: isActive ? 2 : 1,
-          ),
+          color: isDarkMode ? AppColors.darkCard : AppColors.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border:
+              isActive ? Border.all(color: AppColors.accent, width: 2) : null,
+          boxShadow: [
+            if (isActive)
+              BoxShadow(
+                color: AppColors.greenGlow,
+                blurRadius: 12,
+                spreadRadius: 0,
+              )
+            else
+              BoxShadow(
+                color: isDarkMode
+                    ? Colors.black.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+          ],
         ),
         child: Row(
           children: [
-            // Ping indicator
-            SizedBox(
-              width: 50.w,
+            // Ping indicator with background
+            Container(
+              width: 48.w,
+              height: 36.h,
+              decoration: BoxDecoration(
+                color: ping != null && ping > 0
+                    ? pingColor.withOpacity(0.12)
+                    : (isDarkMode
+                        ? AppColors.darkItemsBackground
+                        : AppColors.lightGrey),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              alignment: Alignment.center,
               child: ping != null && ping > 0
                   ? Text(
                       '$ping',
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w700,
                         color: pingColor,
                       ),
                     )
                   : Icon(
-                      ping == -1 ? Icons.close : Icons.hourglass_empty,
-                      size: 16.sp,
-                      color: ping == -1 ? Colors.red : AppColors.grey,
+                      ping == -1 ? Icons.close_rounded : Icons.schedule_rounded,
+                      size: 18.sp,
+                      color: ping == -1 ? AppColors.red : AppColors.textMuted,
                     ),
             ),
+            SizedBox(width: 14.w),
             // Selection indicator
             Container(
               width: 4.w,
-              height: 40.h,
+              height: 36.h,
               decoration: BoxDecoration(
                 color: isActive ? AppColors.accent : Colors.transparent,
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: 14.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -81,21 +102,25 @@ class ProxyListItem extends StatelessWidget {
                   Text(
                     config.configName,
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 15.sp,
                       fontWeight: FontWeight.w600,
-                      color: isDarkMode ? AppColors.white : AppColors.black,
+                      color: isDarkMode
+                          ? AppColors.darkTextPrimary
+                          : AppColors.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    config.protocolType,
+                    config.protocolType.toUpperCase(),
                     style: TextStyle(
-                      fontSize: 12.sp,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
                       color: isDarkMode
-                          ? AppColors.grey.shade400
-                          : AppColors.grey.shade600,
+                          ? AppColors.darkTextSecondary
+                          : AppColors.textSecondary,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
@@ -108,10 +133,10 @@ class ProxyListItem extends StatelessWidget {
   }
 
   Color _getPingColor(int? ping) {
-    if (ping == null || ping <= 0) return AppColors.grey;
-    if (ping < 200) return Colors.green;
-    if (ping < 400) return Colors.orange;
-    return Colors.red;
+    if (ping == null || ping <= 0) return AppColors.textMuted;
+    if (ping < 150) return AppColors.green;
+    if (ping < 300) return AppColors.orange;
+    return AppColors.red;
   }
 
   void _showOptionsMenu(BuildContext context) {

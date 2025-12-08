@@ -48,5 +48,6 @@
   "settings": "Настройки",
   "logs": "Логи",
   "about": "О программе",
-  "mainSettings": "Основные настройки"
+  "mainSettings": "Основные настройки",
+  "connectionSuccess": "Подключено успешно"
 }

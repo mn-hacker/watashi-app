@@ -157,4 +157,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get mainSettings => 'Основные настройки';
+
+  @override
+  String get connectionSuccess => 'Подключено успешно';
 }

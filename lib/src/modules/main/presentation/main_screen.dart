@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/gen/assets.gen.dart';
 import 'package:watashi/src/l10n/l10n.dart';
-import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_controller.dart';
@@ -15,7 +14,6 @@ import 'package:watashi/src/modules/settings/presention/settings_modal_widget.da
 import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/constants/app_icons.dart';
 import 'package:watashi/src/shared/constants/app_text_styles.dart';
-import 'package:watashi/src/shared/presentation/routing/app_router.dart';
 import 'package:watashi/src/shared/utils/async_value_extensions.dart';
 import 'package:watashi/src/shared/widgets/full_screen_menu.dart';
 
@@ -44,29 +42,37 @@ class MainScreen extends ConsumerWidget {
         key: _scaffoldKey,
         backgroundColor: AppColors.transparent,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           title: Padding(
-            padding: EdgeInsets.only(left: 20.w),
+            padding: EdgeInsets.only(left: 12.w),
             child: AppIcons.logo(),
           ),
           actions: [
             IconButton(
-              iconSize: 28,
-              icon: AppIcons.settings(width: 30.h, height: 30.h),
+              iconSize: 26,
+              icon: Icon(
+                Icons.tune_rounded,
+                color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+              ),
               tooltip: 'Quick Settings',
               onPressed: () => showSettingsModal(context),
             ),
             IconButton(
-              iconSize: 28,
-              icon: AppIcons.circlePlus(width: 30.h, height: 30.h),
+              iconSize: 26,
+              icon: Icon(
+                Icons.add_circle_outline_rounded,
+                color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+              ),
               onPressed: () => showAddConfigBottomSheet(context),
             ),
             Padding(
               padding: EdgeInsets.only(right: 8.w),
               child: IconButton(
                 icon: Icon(
-                  Icons.menu,
-                  size: 28,
-                  color: isDarkMode ? AppColors.white : AppColors.black,
+                  Icons.menu_rounded,
+                  size: 26,
+                  color: isDarkMode ? AppColors.white : AppColors.textPrimary,
                 ),
                 onPressed: () => showFullScreenMenu(context),
               ),
@@ -111,7 +117,6 @@ class MainScreenHint extends ConsumerWidget {
     final mainState = ref.watch(mainControllerProvider);
     // Rebuilds when core status changes
     final coreStatus = ref.watch(isCoreRunningProvider).value ?? false;
-    final config = ref.read(connectionConfigRepoProvider).config;
 
     return Center(
       child: Column(
@@ -126,12 +131,13 @@ class MainScreenHint extends ConsumerWidget {
             // TODO: This text style should be here as defining it it in the [AppTextStyles] causes the text to not show
             // Equivalent in the [AppTextStyles] is mainScreenHint
             style: TextStyle(
-              fontSize: 18.sp,
+              fontSize: 17.sp,
               fontFamily: AppTextStyles.fontFamily,
               color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.white
-                  : AppColors.black,
-              fontWeight: FontWeight.w300,
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
+              fontWeight: FontWeight.w400,
+              height: 1.5,
             ),
           ),
           SizedBox(height: 30.h),

@@ -157,4 +157,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mainSettings => 'Main Settings';
+
+  @override
+  String get connectionSuccess => 'Connected successfully';
 }

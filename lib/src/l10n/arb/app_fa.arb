@@ -48,5 +48,6 @@
   "settings": "تنظیمات",
   "logs": "گزارش‌ها",
   "about": "درباره",
-  "mainSettings": "تنظیمات اصلی"
+  "mainSettings": "تنظیمات اصلی",
+  "connectionSuccess": "اتصال با موفقیت برقرار شد"
 }

@@ -70,9 +70,10 @@ extension AsyncValueUI<T> on AsyncValue<T> {
           ),
         );
       } else {
+        // Show success message
         _showSnackBar(
           context,
-          snackBar: AppSnackBar.positive(message: value.toString()),
+          snackBar: AppSnackBar.positive(message: '✓ Connected'),
         );
       }
     }

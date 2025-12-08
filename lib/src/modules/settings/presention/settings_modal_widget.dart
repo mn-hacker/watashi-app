@@ -43,13 +43,16 @@ class _SettingsModal extends ConsumerWidget {
           ),
           margin: EdgeInsets.symmetric(horizontal: 20.w),
           decoration: BoxDecoration(
-            color: isDarkMode ? AppColors.darkSurface : AppColors.white,
-            borderRadius: BorderRadius.circular(16.r),
+            color: isDarkMode ? AppColors.darkCard : AppColors.white,
+            borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                spreadRadius: 1,
+                color: isDarkMode
+                    ? Colors.black.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.08),
+                blurRadius: 24,
+                spreadRadius: 0,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
@@ -67,12 +70,16 @@ class _SettingsModal extends ConsumerWidget {
                       style: AppTextStyles.settingsModalTitle,
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: isDarkMode
+                            ? AppColors.darkTextSecondary
+                            : AppColors.textSecondary,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      iconSize: 24.sp,
-                      color: AppColors.grey,
+                      iconSize: 22.sp,
                     ),
                   ],
                 ),
@@ -307,14 +314,19 @@ class _ActionButtons extends ConsumerWidget {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.accent,
+            foregroundColor: AppColors.white,
+            elevation: 0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(12.r),
             ),
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
           ),
           child: Text(
             context.l10n.confirm,
-            style: AppTextStyles.settingsModalConfirmButton,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14.sp,
+            ),
           ),
         ),
       ],

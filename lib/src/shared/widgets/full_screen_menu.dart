@@ -60,12 +60,14 @@ class _FullScreenMenu extends ConsumerWidget {
                 onTap: () {}, // Prevent closing when tapping menu
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isDarkMode ? AppColors.darkSurface : AppColors.white,
+                    color: isDarkMode ? AppColors.darkCard : AppColors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 20,
-                        offset: const Offset(-5, 0),
+                        color: isDarkMode
+                            ? Colors.black.withOpacity(0.4)
+                            : Colors.black.withOpacity(0.12),
+                        blurRadius: 30,
+                        offset: const Offset(-8, 0),
                       ),
                     ],
                   ),
@@ -92,8 +94,8 @@ class _FullScreenMenu extends ConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: isDarkMode
-                                      ? AppColors.white.withOpacity(0.7)
-                                      : AppColors.black54,
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.textSecondary,
                                 ),
                               ),
                             ],
@@ -102,7 +104,7 @@ class _FullScreenMenu extends ConsumerWidget {
                         SizedBox(height: 10.h),
                         // Menu Items
                         _DrawerMenuItem(
-                          icon: Icons.settings,
+                          icon: Icons.settings_rounded,
                           title: context.l10n.settings,
                           onTap: () {
                             Navigator.pop(context);
@@ -110,7 +112,7 @@ class _FullScreenMenu extends ConsumerWidget {
                           },
                         ),
                         _DrawerMenuItem(
-                          icon: Icons.bug_report,
+                          icon: Icons.article_rounded,
                           title: context.l10n.logs,
                           onTap: () {
                             Navigator.pop(context);
@@ -118,7 +120,7 @@ class _FullScreenMenu extends ConsumerWidget {
                           },
                         ),
                         _DrawerMenuItem(
-                          icon: Icons.info_outline,
+                          icon: Icons.info_outline_rounded,
                           title: context.l10n.about,
                           onTap: () {
                             Navigator.pop(context);
@@ -172,16 +174,25 @@ class _DrawerMenuItem extends StatelessWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return ListTile(
-      leading: Icon(
-        icon,
-        color:
-            isDarkMode ? AppColors.white.withOpacity(0.8) : AppColors.black87,
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 4.h),
+      leading: Container(
+        padding: EdgeInsets.all(8.w),
+        decoration: BoxDecoration(
+          color: AppColors.accent.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Icon(
+          icon,
+          color: AppColors.accent,
+          size: 22.sp,
+        ),
       ),
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 16.sp,
-          color: isDarkMode ? AppColors.white : AppColors.black,
+          fontSize: 15.sp,
+          fontWeight: FontWeight.w500,
+          color: isDarkMode ? AppColors.darkTextPrimary : AppColors.textPrimary,
         ),
       ),
       onTap: onTap,

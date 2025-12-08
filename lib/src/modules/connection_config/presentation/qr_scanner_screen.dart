@@ -25,56 +25,59 @@ class _QRScannerScreenState extends ConsumerState<QRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final l10n = context.l10n;
+    // Calculate scan area size based on screen width
+    final scanAreaSize = MediaQuery.of(context).size.width * 0.7;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? AppColors.darkBackground : AppColors.white,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(l10n.scanQRCode),
-        backgroundColor: isDarkMode ? AppColors.darkSurface : AppColors.white,
-        foregroundColor: isDarkMode ? AppColors.white : AppColors.black,
+        backgroundColor: Colors.black,
+        foregroundColor: AppColors.white,
         elevation: 0,
       ),
       body: Stack(
         children: [
-          MobileScanner(
-            controller: _scannerController,
-            onDetect: (capture) => _onDetect(capture, context),
+          // Camera preview - full screen
+          Positioned.fill(
+            child: MobileScanner(
+              controller: _scannerController,
+              onDetect: (capture) => _onDetect(capture, context),
+            ),
           ),
-          // Overlay with scanning frame
-          _buildScanOverlay(context),
+          // Dark overlay with scan window
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _ScanOverlayPainter(scanAreaSize: scanAreaSize),
+            ),
+          ),
+          // Scan frame border and text
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: scanAreaSize,
+                  height: scanAreaSize,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.accent, width: 3),
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                Text(
+                  l10n.scanQRCode,
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildScanOverlay(BuildContext context) {
-    return CustomPaint(
-      painter: _ScanOverlayPainter(),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 250.w,
-              height: 250.w,
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.accent, width: 2),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-            ),
-            SizedBox(height: 32.h),
-            Text(
-              context.l10n.scanQRCode,
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -120,20 +123,23 @@ class _QRScannerScreenState extends ConsumerState<QRScannerScreen> {
 }
 
 class _ScanOverlayPainter extends CustomPainter {
+  final double scanAreaSize;
+
+  _ScanOverlayPainter({required this.scanAreaSize});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
+      ..color = Colors.black.withOpacity(0.6)
       ..style = PaintingStyle.fill;
 
-    final scanAreaSize = 250.0;
     final scanAreaRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
         center: Offset(size.width / 2, size.height / 2),
         width: scanAreaSize,
         height: scanAreaSize,
       ),
-      const Radius.circular(20),
+      const Radius.circular(16),
     );
 
     final fullPath = Path()
@@ -146,5 +152,6 @@ class _ScanOverlayPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _ScanOverlayPainter oldDelegate) =>
+      oldDelegate.scanAreaSize != scanAreaSize;
 }

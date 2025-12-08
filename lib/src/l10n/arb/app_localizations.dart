@@ -393,6 +393,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Main Settings'**
   String get mainSettings;
+
+  /// No description provided for @connectionSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected successfully'**
+  String get connectionSuccess;
 }
 
 class _AppLocalizationsDelegate

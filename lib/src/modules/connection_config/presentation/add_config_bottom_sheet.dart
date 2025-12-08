@@ -27,10 +27,10 @@ class AddConfigBottomSheet extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode ? AppColors.darkSurface : AppColors.white,
+        color: isDarkMode ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.r),
-          topRight: Radius.circular(20.r),
+          topLeft: Radius.circular(24.r),
+          topRight: Radius.circular(24.r),
         ),
       ),
       child: SafeArea(
@@ -44,8 +44,8 @@ class AddConfigBottomSheet extends ConsumerWidget {
               height: 4.h,
               decoration: BoxDecoration(
                 color: isDarkMode
-                    ? AppColors.grey.shade600
-                    : AppColors.grey.shade300,
+                    ? AppColors.darkItemsBackground
+                    : AppColors.lightGrey,
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -157,34 +157,39 @@ class _OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: isDarkMode ? AppColors.darkCard : AppColors.grey.shade100,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color:
-                isDarkMode ? AppColors.grey.shade700 : AppColors.grey.shade300,
-          ),
+          color:
+              isDarkMode ? AppColors.darkItemsBackground : AppColors.lightGrey,
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 40.sp,
-              color: isDarkMode ? AppColors.accent : AppColors.accent,
+            Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 28.sp,
+                color: AppColors.accent,
+              ),
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: 14.h),
             Text(
               label,
               style: TextStyle(
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: isDarkMode ? AppColors.white : AppColors.black,
+                fontWeight: FontWeight.w600,
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -210,35 +215,40 @@ class _OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
         decoration: BoxDecoration(
-          color: isDarkMode ? AppColors.darkCard : AppColors.grey.shade100,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color:
-                isDarkMode ? AppColors.grey.shade700 : AppColors.grey.shade300,
-          ),
+          color:
+              isDarkMode ? AppColors.darkItemsBackground : AppColors.lightGrey,
+          borderRadius: BorderRadius.circular(16.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 24.sp,
-              color: isDarkMode ? AppColors.accent : AppColors.accent,
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withOpacity(0.12),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 20.sp,
+                color: AppColors.accent,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
               label,
               style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: isDarkMode ? AppColors.white : AppColors.black,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w600,
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.textPrimary,
               ),
             ),
           ],

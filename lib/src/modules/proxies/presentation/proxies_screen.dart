@@ -23,21 +23,26 @@ class ProxiesScreen extends ConsumerWidget {
     final configs = configRepo.configs;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? AppColors.darkBackground : AppColors.white,
+      backgroundColor:
+          isDarkMode ? AppColors.darkBackground : AppColors.lightGrey,
       appBar: AppBar(
         title: Text(
           context.l10n.proxies,
           style: TextStyle(
-            color: isDarkMode ? AppColors.white : AppColors.black,
-            fontWeight: FontWeight.bold,
+            color:
+                isDarkMode ? AppColors.darkTextPrimary : AppColors.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 18.sp,
           ),
         ),
         backgroundColor: isDarkMode ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
-            Icons.swap_vert,
-            color: isDarkMode ? AppColors.white : AppColors.black,
+            Icons.swap_vert_rounded,
+            color: isDarkMode
+                ? AppColors.darkTextSecondary
+                : AppColors.textSecondary,
           ),
           tooltip: context.l10n.sortByPing,
           onPressed: () => _sortByPing(ref),
@@ -45,8 +50,10 @@ class ProxiesScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.menu,
-              color: isDarkMode ? AppColors.white : AppColors.black,
+              Icons.menu_rounded,
+              color: isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
             ),
             onPressed: () => showFullScreenMenu(context),
           ),
@@ -55,10 +62,23 @@ class ProxiesScreen extends ConsumerWidget {
       body: configs.isEmpty
           ? _buildEmptyState(context, isDarkMode)
           : _buildConfigList(context, ref, isDarkMode, configs, configRepo),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.accent,
-        onPressed: () => _refreshPing(ref),
-        child: Icon(Icons.bolt, color: AppColors.white),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.greenGlow,
+              blurRadius: 16,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          backgroundColor: AppColors.accent,
+          elevation: 0,
+          onPressed: () => _refreshPing(ref),
+          child: Icon(Icons.bolt_rounded, color: AppColors.white, size: 26),
+        ),
       ),
     );
   }
@@ -68,31 +88,44 @@ class ProxiesScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.dns_outlined,
-            size: 80.sp,
-            color:
-                isDarkMode ? AppColors.grey.shade600 : AppColors.grey.shade400,
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: isDarkMode
+                  ? AppColors.accent.withOpacity(0.1)
+                  : AppColors.accent.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.dns_rounded,
+              size: 48.sp,
+              color: AppColors.accent,
+            ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
           Text(
             context.l10n.addYourConfig,
             style: TextStyle(
               fontSize: 18.sp,
+              fontWeight: FontWeight.w500,
               color: isDarkMode
-                  ? AppColors.grey.shade400
-                  : AppColors.grey.shade600,
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
             ),
           ),
           SizedBox(height: 24.h),
           ElevatedButton.icon(
             onPressed: () => showAddConfigBottomSheet(context),
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add_rounded),
             label: Text(context.l10n.addConfig),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.accent,
               foregroundColor: AppColors.white,
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 14.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              elevation: 0,
             ),
           ),
         ],

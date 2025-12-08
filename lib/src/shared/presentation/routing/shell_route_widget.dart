@@ -50,25 +50,29 @@ class _BottomNavShellState extends State<BottomNavShell> {
         ],
       ),
       bottomNavigationBar: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         decoration: BoxDecoration(
-          color: isDarkMode ? AppColors.darkSurface : AppColors.white,
+          color: isDarkMode ? AppColors.darkCard : AppColors.white,
+          borderRadius: BorderRadius.circular(24.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
+              color: isDarkMode
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Proxies tab
                 _NavItem(
-                  icon: Icons.list_alt,
+                  icon: Icons.layers_rounded,
                   label: context.l10n.proxies,
                   isSelected: _currentIndex == 0,
                   onTap: () => setState(() => _currentIndex = 0),
@@ -103,34 +107,38 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final color = isSelected
-        ? AppColors.accent
-        : (isDarkMode ? AppColors.grey.shade400 : AppColors.grey.shade600);
+    final selectedColor = AppColors.accent;
+    final unselectedColor =
+        isDarkMode ? AppColors.darkTextSecondary : AppColors.textSecondary;
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        decoration: isSelected
-            ? BoxDecoration(
-                color: isDarkMode
-                    ? AppColors.accent.withOpacity(0.1)
-                    : AppColors.accent.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12.r),
-              )
-            : null,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (isDarkMode
+                  ? AppColors.accent.withOpacity(0.15)
+                  : AppColors.accent.withOpacity(0.1))
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(16.r),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 24.sp),
+            Icon(
+              icon,
+              color: isSelected ? selectedColor : unselectedColor,
+              size: 24.sp,
+            ),
             SizedBox(height: 4.h),
             Text(
               label,
               style: TextStyle(
-                color: color,
+                color: isSelected ? selectedColor : unselectedColor,
                 fontSize: 12.sp,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
               ),
             ),
           ],
@@ -153,39 +161,60 @@ class _NavItemWithCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return InkWell(
+    return GestureDetector(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(30.r),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: EdgeInsets.all(12.w),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+            padding: EdgeInsets.all(14.w),
             decoration: BoxDecoration(
+              gradient: isSelected
+                  ? LinearGradient(
+                      colors: AppColors.connectedGradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
               color: isSelected
-                  ? AppColors.accent
+                  ? null
                   : (isDarkMode
-                      ? AppColors.grey.shade700
-                      : AppColors.grey.shade300),
+                      ? AppColors.darkItemsBackground
+                      : AppColors.lightGrey),
               shape: BoxShape.circle,
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: AppColors.greenGlow,
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                      ),
+                    ]
+                  : null,
             ),
             child: Icon(
-              Icons.power_settings_new,
-              color: isSelected ? AppColors.white : AppColors.grey,
-              size: 24.sp,
+              Icons.power_settings_new_rounded,
+              color: isSelected
+                  ? AppColors.white
+                  : (isDarkMode
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary),
+              size: 26.sp,
             ),
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 6.h),
           Text(
             context.l10n.home,
             style: TextStyle(
               color: isSelected
                   ? AppColors.accent
                   : (isDarkMode
-                      ? AppColors.grey.shade400
-                      : AppColors.grey.shade600),
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary),
               fontSize: 12.sp,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
         ],

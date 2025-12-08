@@ -48,5 +48,6 @@
   "settings": "Settings",
   "logs": "Logs",
   "about": "About",
-  "mainSettings": "Main Settings"
+  "mainSettings": "Main Settings",
+  "connectionSuccess": "Connected successfully"
 }

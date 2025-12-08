@@ -7,35 +7,121 @@ import 'package:watashi/src/shared/constants/app_colors.dart';
 final class AppTheme {
   AppTheme._();
 
-  // Light Theme
-  static final lightTheme = ThemeData.light(
+  // Light Theme - Modern & Clean
+  static final lightTheme = ThemeData(
     useMaterial3: true,
-  ).copyWith(
-    scaffoldBackgroundColor: AppColors.transparent,
+    brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: AppColors.accent,
+      secondary: AppColors.secondary,
+      surface: AppColors.white,
+      error: AppColors.red,
+    ),
+    scaffoldBackgroundColor: AppColors.lightGrey,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.white,
-      foregroundColor: AppColors.black,
+      foregroundColor: AppColors.textPrimary,
       elevation: 0,
+      centerTitle: true,
+      titleTextStyle: TextStyle(
+        color: AppColors.textPrimary,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
     ),
-    cardColor: AppColors.white,
+    cardTheme: CardThemeData(
+      color: AppColors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.accent,
+      ),
+    ),
+    iconTheme: const IconThemeData(
+      color: AppColors.textSecondary,
+    ),
     dialogBackgroundColor: AppColors.white,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: AppColors.white,
+      selectedItemColor: AppColors.accent,
+      unselectedItemColor: AppColors.textMuted,
+      elevation: 8,
+    ),
   );
 
-  // Dark Theme
-  static final darkTheme = ThemeData.dark(
+  // Dark Theme - GitHub-inspired
+  static final darkTheme = ThemeData(
     useMaterial3: true,
-  ).copyWith(
-    scaffoldBackgroundColor: AppColors.transparent,
+    brightness: Brightness.dark,
+    colorScheme: ColorScheme.dark(
+      primary: AppColors.accent,
+      secondary: AppColors.secondary,
+      surface: AppColors.darkSurface,
+      error: AppColors.red,
+    ),
+    scaffoldBackgroundColor: AppColors.darkBackground,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.darkSurface,
-      foregroundColor: AppColors.white,
+      foregroundColor: AppColors.darkTextPrimary,
       elevation: 0,
+      centerTitle: true,
+      titleTextStyle: TextStyle(
+        color: AppColors.darkTextPrimary,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
     ),
-    cardColor: AppColors.darkCard,
+    cardTheme: CardThemeData(
+      color: AppColors.darkCard,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.accent,
+        foregroundColor: AppColors.white,
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.accent,
+      ),
+    ),
+    iconTheme: const IconThemeData(
+      color: AppColors.darkTextSecondary,
+    ),
     dialogBackgroundColor: AppColors.darkSurface,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: AppColors.darkSurface,
+      selectedItemColor: AppColors.accent,
+      unselectedItemColor: AppColors.darkTextSecondary,
+      elevation: 8,
+    ),
   );
 
-  // Deprecated - kept for backward compatibility, use lightTheme instead
+  // Deprecated - kept for backward compatibility
   static final appTheme = lightTheme;
 
   static const lightSystemOverlayStyle = SystemUiOverlayStyle(
@@ -43,6 +129,7 @@ final class AppTheme {
     systemNavigationBarColor: AppColors.transparent,
     systemNavigationBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.dark,
   );
 
   static const darkSystemOverlayStyle = SystemUiOverlayStyle(
@@ -50,14 +137,15 @@ final class AppTheme {
     systemNavigationBarColor: AppColors.transparent,
     systemNavigationBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.light,
+    statusBarIconBrightness: Brightness.light,
   );
 
   static final windowsWrapperButtonColors = WindowButtonColors(
     iconNormal: AppColors.white,
-    mouseOver: AppColors.white.withValues(alpha: 0.1),
-    mouseDown: AppColors.white.withValues(alpha: 0.54),
-    iconMouseOver: AppColors.white.withValues(alpha: 0.5),
-    iconMouseDown: AppColors.white.withValues(alpha: 0.5),
+    mouseOver: AppColors.white.withOpacity(0.1),
+    mouseDown: AppColors.white.withOpacity(0.54),
+    iconMouseOver: AppColors.white.withOpacity(0.5),
+    iconMouseDown: AppColors.white.withOpacity(0.5),
   );
 
   static final windowsWrapperCloseButtonColors = WindowButtonColors(

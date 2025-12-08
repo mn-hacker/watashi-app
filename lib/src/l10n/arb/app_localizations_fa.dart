@@ -157,4 +157,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get mainSettings => 'تنظیمات اصلی';
+
+  @override
+  String get connectionSuccess => 'اتصال با موفقیت برقرار شد';
 }
