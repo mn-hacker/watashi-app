@@ -148,7 +148,6 @@ class ConnectionConfigModel {
         case CoreNames.xray:
         case CoreNames.clashMeta:
         case CoreNames.singbox:
-        case CoreNames.v2ray:
           config = ProxyUrlParser.injectToConfig(
               _baseConfig, _parsedConfig!.toXrayJson(allowInsecure: true))
             ..['outbounds'][0]['tag'] = 'proxy';

@@ -4,12 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/gen/assets.gen.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
+import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_controller.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_widget.dart';
 import 'package:watashi/src/modules/core/data/core_repo.dart';
 import 'package:watashi/src/modules/main/presentation/main_controller.dart';
 import 'package:watashi/src/modules/main/presentation/widgets/main_connect_button/main_connect_button.dart';
+import 'package:watashi/src/modules/profile/data/profile_repo.dart';
+import 'package:watashi/src/modules/profile/presentation/profile_card.dart';
 import 'package:watashi/src/modules/settings/presention/settings_modal_widget.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/constants/app_icons.dart';
@@ -32,21 +35,21 @@ class MainScreen extends ConsumerWidget {
     double backgroundOpacity;
 
     if (isConnected) {
-      // When VPN is connected - green tint
+      // When VPN is connected - green stripes only
       backgroundColorFilter = ColorFilter.mode(
-        AppColors.accent.withOpacity(0.3),
-        BlendMode.srcATop,
+        AppColors.accent,
+        BlendMode.srcIn,
       );
-      backgroundOpacity = isDarkMode ? 0.5 : 0.8;
+      backgroundOpacity = isDarkMode ? 0.6 : 1.0;
     } else if (isDarkMode) {
-      // Dark mode disconnected - light/white tint
+      // Dark mode disconnected - light/white stripes
       backgroundColorFilter = const ColorFilter.mode(
-        Colors.white24,
-        BlendMode.srcATop,
+        Colors.white70,
+        BlendMode.srcIn,
       );
-      backgroundOpacity = 0.15;
+      backgroundOpacity = 0.2;
     } else {
-      // Light mode disconnected - default grey
+      // Light mode disconnected - default grey stripes
       backgroundColorFilter = null;
       backgroundOpacity = 1.0;
     }
@@ -122,16 +125,68 @@ class _MainScreenContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Rebuilds when connection config changes
     ref.watch(connectionConfigControllerProvider);
+    final configRepo = ref.watch(connectionConfigRepoProvider);
+    final profileRepo = ref.watch(profileRepoProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    // Show empty state when no configs and no profiles
+    if (configRepo.configs.isEmpty && !profileRepo.hasProfiles) {
+      return _buildEmptyState(context, isDarkMode);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: 0.075.sh),
+        // Profile card at top when profiles exist
+        if (profileRepo.hasProfiles) ...[
+          SizedBox(height: 8.h),
+          const ProfileCard(),
+        ],
+        SizedBox(height: 0.05.sh),
         MainScreenHint(),
         const Spacer(),
         ConnectionButton(),
         SizedBox(height: 0.125.sh),
       ],
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context, bool isDarkMode) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'با افزودن یک پروفایل اشتراک شروع کنید',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: isDarkMode
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
+            ),
+          ),
+          SizedBox(height: 24.h),
+          OutlinedButton.icon(
+            onPressed: () => showAddConfigBottomSheet(context),
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('افزودن پروفایل جدید'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor:
+                  isDarkMode ? AppColors.white : AppColors.textPrimary,
+              side: BorderSide(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary,
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 14.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.r),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

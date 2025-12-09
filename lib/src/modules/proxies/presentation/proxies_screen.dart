@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
-import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
 import 'package:watashi/src/modules/proxies/presentation/config_editor_screen.dart';
 import 'package:watashi/src/modules/proxies/presentation/widgets/auto_select_item.dart';
@@ -78,9 +77,7 @@ class ProxiesScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: configs.isEmpty
-          ? _buildEmptyState(context, isDarkMode)
-          : _buildConfigList(context, ref, isDarkMode, configs, configRepo),
+      body: _buildConfigList(context, ref, isDarkMode, configs, configRepo),
       floatingActionButton: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -98,56 +95,6 @@ class ProxiesScreen extends ConsumerWidget {
           onPressed: () => _refreshPing(ref),
           child: Icon(Icons.bolt_rounded, color: AppColors.white, size: 26),
         ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(BuildContext context, bool isDarkMode) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppColors.accent.withOpacity(0.1)
-                  : AppColors.accent.withOpacity(0.08),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.dns_rounded,
-              size: 48.sp,
-              color: AppColors.accent,
-            ),
-          ),
-          SizedBox(height: 24.h),
-          Text(
-            context.l10n.addYourConfig,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w500,
-              color: isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.textSecondary,
-            ),
-          ),
-          SizedBox(height: 24.h),
-          ElevatedButton.icon(
-            onPressed: () => showAddConfigBottomSheet(context),
-            icon: const Icon(Icons.add_rounded),
-            label: Text(context.l10n.addConfig),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.accent,
-              foregroundColor: AppColors.white,
-              padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 14.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              elevation: 0,
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -15,107 +15,113 @@ class LogsScreen extends ConsumerWidget {
     final String logsValue = logsState.value ?? '';
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Padding(
-            padding: EdgeInsets.only(left: 20.w),
-            child: AppIcons.logo(isDarkMode: isDarkMode),
-          ),
-          centerTitle: false,
-          actions: [
-            if (logsValue.isNotEmpty)
-              IconButton(
-                icon: AppIcons.copy(width: 25.h, height: 25.h),
-                onPressed: () {
-                  if (logsValue.isNotEmpty) {
-                    Clipboard.setData(ClipboardData(text: logsValue));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Logs copied to clipboard")),
-                    );
-                  }
-                },
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            title: Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: AppIcons.logo(isDarkMode: isDarkMode),
+            ),
+            centerTitle: false,
+            actions: [
+              if (logsValue.isNotEmpty)
+                IconButton(
+                  icon: AppIcons.copy(width: 25.h, height: 25.h),
+                  onPressed: () {
+                    if (logsValue.isNotEmpty) {
+                      Clipboard.setData(ClipboardData(text: logsValue));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text("Logs copied to clipboard")),
+                      );
+                    }
+                  },
+                ),
+              Padding(
+                padding: EdgeInsets.only(right: 16.w),
+                child: IconButton(
+                    iconSize: 36,
+                    icon: AppIcons.back(width: 36.h, height: 36.h),
+                    onPressed: () => Navigator.of(context).pop()),
               ),
-            Padding(
-              padding: EdgeInsets.only(right: 16.w),
-              child: IconButton(
-                  iconSize: 36,
-                  icon: AppIcons.back(width: 36.h, height: 36.h),
-                  onPressed: () => Navigator.of(context).pop()),
-            ),
-          ],
-        ),
-        body: DecoratedBox(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/bg.png'),
-              fit: BoxFit.cover,
-            ),
+            ],
           ),
-          child: Center(
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Padding(
-                padding: EdgeInsets.only(right: 30.w, left: 30.w, bottom: 75.w),
-                child: logsState.when(
-                  data: (logs) {
-                    final logLines = logs.trim().split('\n\n');
-                    return logs.isEmpty
-                        ? Column(children: [
-                            AppIcons.emptyLog(width: 100.w, height: 100.h),
-                            SizedBox(height: 15.h),
-                            Text(
-                              'There are no logs to display.',
-                              style: const TextStyle(
-                                color: AppColors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ])
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(
-                              logLines.length,
-                              (index) => Container(
-                                padding: EdgeInsets.all(7.5.w),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.w),
-                                  color: index % 2 == 0
-                                      ? Colors.transparent
-                                      : Colors.grey.shade200,
+          body: DecoratedBox(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/bg.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                reverse: true,
+                child: Padding(
+                  padding:
+                      EdgeInsets.only(right: 30.w, left: 30.w, bottom: 75.w),
+                  child: logsState.when(
+                    data: (logs) {
+                      final logLines = logs.trim().split('\n\n');
+                      return logs.isEmpty
+                          ? Column(children: [
+                              AppIcons.emptyLog(width: 100.w, height: 100.h),
+                              SizedBox(height: 15.h),
+                              Text(
+                                'There are no logs to display.',
+                                style: const TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w300,
                                 ),
-                                width: double.infinity,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 2.w),
-                                  child: Text(
-                                    logLines[index],
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w300,
+                              ),
+                            ])
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(
+                                logLines.length,
+                                (index) => Container(
+                                  padding: EdgeInsets.all(7.5.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.w),
+                                    color: index % 2 == 0
+                                        ? Colors.transparent
+                                        : Colors.grey.shade200,
+                                  ),
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 2.w),
+                                    child: Text(
+                                      logLines[index],
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w300,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                  },
-                  loading: () => Text(
-                    'Connect to see logs.',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  error: (e, _) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Text(
-                      'Error loading logs: $e',
-                      style: const TextStyle(
-                        fontSize: 16,
+                            );
+                    },
+                    loading: () => Text(
+                      'Connect to see logs.',
+                      style: TextStyle(
+                        fontSize: 18,
                         fontWeight: FontWeight.w300,
-                        color: Colors.red,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    error: (e, _) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Text(
+                        'Error loading logs: $e',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ),
@@ -123,24 +129,24 @@ class LogsScreen extends ConsumerWidget {
               ),
             ),
           ),
-        ),
-        floatingActionButton: logsValue.isNotEmpty
-            ? SizedBox(
-                height: 60.w,
-                width: 60.w,
-                child: FittedBox(
-                  child: FloatingActionButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
+          floatingActionButton: logsValue.isNotEmpty
+              ? SizedBox(
+                  height: 60.w,
+                  width: 60.w,
+                  child: FittedBox(
+                    child: FloatingActionButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      backgroundColor: AppColors.lightGrey,
+                      child: AppIcons.eraser(width: 27.w, height: 27.w),
+                      onPressed: () {
+                        ref.read(logsControllerProvider.notifier).clearLogs();
+                      },
                     ),
-                    backgroundColor: AppColors.lightGrey,
-                    child: AppIcons.eraser(width: 27.w, height: 27.w),
-                    onPressed: () {
-                      ref.read(logsControllerProvider.notifier).clearLogs();
-                    },
                   ),
-                ),
-              )
-            : null);
+                )
+              : null),
+    );
   }
 }

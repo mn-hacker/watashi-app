@@ -12,49 +12,53 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
-      backgroundColor: isDarkMode ? AppColors.darkBackground : AppColors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        backgroundColor:
+            isDarkMode ? AppColors.darkBackground : AppColors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+            ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          context.l10n.settings,
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w600,
-            color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+          title: Text(
+            context.l10n.settings,
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: isDarkMode ? AppColors.white : AppColors.textPrimary,
+            ),
           ),
+          centerTitle: false,
         ),
-        centerTitle: false,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Placeholder content
-              _buildSectionTitle(context, 'General', isDarkMode),
-              SizedBox(height: 16.h),
-              _buildEmptyCard(context, isDarkMode),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Placeholder content
+                _buildSectionTitle(context, 'General', isDarkMode),
+                SizedBox(height: 16.h),
+                _buildEmptyCard(context, isDarkMode),
 
-              SizedBox(height: 32.h),
-              _buildSectionTitle(context, 'Network', isDarkMode),
-              SizedBox(height: 16.h),
-              _buildEmptyCard(context, isDarkMode),
+                SizedBox(height: 32.h),
+                _buildSectionTitle(context, 'Network', isDarkMode),
+                SizedBox(height: 16.h),
+                _buildEmptyCard(context, isDarkMode),
 
-              SizedBox(height: 32.h),
-              _buildSectionTitle(context, 'Advanced', isDarkMode),
-              SizedBox(height: 16.h),
-              _buildEmptyCard(context, isDarkMode),
-            ],
+                SizedBox(height: 32.h),
+                _buildSectionTitle(context, 'Advanced', isDarkMode),
+                SizedBox(height: 16.h),
+                _buildEmptyCard(context, isDarkMode),
+              ],
+            ),
           ),
         ),
       ),

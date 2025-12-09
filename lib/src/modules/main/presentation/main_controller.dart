@@ -3,6 +3,7 @@ import 'package:proxy_core/gen/bindings/ProxyCoreService.pb.dart';
 import 'package:watashi/src/modules/connection/application/connection_service.dart';
 import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/core/data/core_repo.dart';
+import 'package:watashi/src/modules/profile/data/profile_repo.dart';
 import 'package:watashi/src/shared/errors/app_exceptions.dart';
 
 final mainControllerProvider =
@@ -13,6 +14,9 @@ class MainController extends AsyncNotifier<MainState> {
   Future<MainState> build() async {
     // Await the preparation to complete
     ref.watch(connectionServiceProvider).prepare();
+
+    // Load saved profiles at startup
+    await ref.read(profileRepoProvider).loadProfiles();
 
     // Disconnect on changing mode: proxy <=> vpn
     ref.onDispose(ref.read(connectionServiceProvider).disconnect);
@@ -57,9 +61,9 @@ class MainController extends AsyncNotifier<MainState> {
     _setReady();
   }
 
-  _setReady() => state = AsyncValue.data(MainState.ready);
+  void _setReady() => state = AsyncValue.data(MainState.ready);
 
-  _setConnected() => state = AsyncValue.data(MainState.connected);
+  void _setConnected() => state = AsyncValue.data(MainState.connected);
 }
 
 enum MainState { ready, loading, connected }

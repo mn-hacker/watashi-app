@@ -192,21 +192,15 @@ class _CoreTypeSection extends ConsumerWidget {
         ),
         RadioOption<CoreNames>(
           title: 'Clash Meta',
+          subtitle: '(Soon)',
           groupValue: settings.coreType,
           value: CoreNames.clashMeta,
-          onChanged: (value) => settingsController.updateCoreType(value!),
+          enabled: false,
         ),
         RadioOption<CoreNames>(
           title: 'SingBox',
           groupValue: settings.coreType,
           value: CoreNames.singbox,
-          onChanged: (value) => settingsController.updateCoreType(value!),
-        ),
-        RadioOption<CoreNames>(
-          title: 'Xray',
-          subtitle: '(V2ray)',
-          groupValue: settings.coreType,
-          value: CoreNames.v2ray,
           onChanged: (value) => settingsController.updateCoreType(value!),
         ),
         RadioOption<CoreNames>(

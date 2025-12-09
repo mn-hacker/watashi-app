@@ -113,7 +113,7 @@ class _FullScreenMenu extends ConsumerWidget {
                             Navigator.pop(context);
                             ref
                                 .read(goRouterProvider)
-                                .goNamed(settingsScreenName);
+                                .pushNamed(settingsScreenName);
                           },
                         ),
                         _DrawerMenuItem(

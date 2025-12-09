@@ -8,6 +8,8 @@ import 'package:watashi/src/modules/connection_config/data/connection_config_rep
 import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_state.dart';
 import 'package:watashi/src/modules/core/data/core_repo.dart';
+import 'package:watashi/src/modules/profile/data/profile_repo.dart';
+import 'package:watashi/src/modules/profile/data/profile_parser.dart';
 import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
 
 final connectionConfigControllerProvider = NotifierProvider<
@@ -204,6 +206,21 @@ class ConnectionConfigInputController
         httpClient.close();
         return;
       }
+
+      // Extract headers for profile
+      final headers = <String, String>{};
+      response.headers.forEach((name, values) {
+        headers[name.toLowerCase()] = values.join(', ');
+      });
+      debugPrint('[Subscription] Headers: $headers');
+
+      // Parse profile from headers (name, subscription info)
+      final profile = ProfileParser.parse(url, headers);
+
+      // Save profile to repository
+      final profileRepo = ref.read(profileRepoProvider);
+      await profileRepo.addProfile(url);
+      debugPrint('[Subscription] Profile created: ${profile.name}');
 
       final content = await response.transform(utf8.decoder).join();
       httpClient.close();

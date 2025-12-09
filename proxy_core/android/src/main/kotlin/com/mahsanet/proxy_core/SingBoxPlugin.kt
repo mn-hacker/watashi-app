@@ -112,7 +112,9 @@ class SingBoxPlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
 
     private fun handleGetLogs(result: MethodChannel.Result) {
         synchronized(logBuffer) {
-            result.success(logBuffer.toString())
+            val logs = logBuffer.toString()
+            logBuffer.clear() // Clear buffer after reading to prevent duplicates
+            result.success(logs)
         }
     }
 
