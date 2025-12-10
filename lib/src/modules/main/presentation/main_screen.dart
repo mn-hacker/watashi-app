@@ -28,28 +28,20 @@ class MainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isConnected = ref.watch(isCoreRunningProvider).valueOrNull ?? false;
 
-    // Determine color filter based on connection state and theme
+    // Color filter for dark mode only
     ColorFilter? backgroundColorFilter;
     double backgroundOpacity;
 
-    if (isConnected) {
-      // When VPN is connected - green stripes only
-      backgroundColorFilter = ColorFilter.mode(
-        AppColors.accent,
-        BlendMode.srcIn,
-      );
-      backgroundOpacity = isDarkMode ? 0.6 : 1.0;
-    } else if (isDarkMode) {
-      // Dark mode disconnected - light/white stripes
+    if (isDarkMode) {
+      // Dark mode - light/white stripes
       backgroundColorFilter = const ColorFilter.mode(
         Colors.white70,
         BlendMode.srcIn,
       );
       backgroundOpacity = 0.2;
     } else {
-      // Light mode disconnected - default grey stripes
+      // Light mode - default grey stripes
       backgroundColorFilter = null;
       backgroundOpacity = 1.0;
     }

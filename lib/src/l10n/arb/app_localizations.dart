@@ -399,6 +399,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Connected successfully'**
   String get connectionSuccess;
+
+  /// No description provided for @profileSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile saved successfully'**
+  String get profileSavedSuccess;
+
+  /// No description provided for @profileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccess;
+
+  /// No description provided for @addingProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Adding profile'**
+  String get addingProfile;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @copyLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy Link'**
+  String get copyLink;
+
+  /// No description provided for @linkCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Link copied'**
+  String get linkCopied;
+
+  /// No description provided for @deleteProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteProfile;
+
+  /// No description provided for @deleteProfileConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete profile?'**
+  String get deleteProfileConfirm;
+
+  /// No description provided for @deleteProfileMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {name}?'**
+  String deleteProfileMessage(String name);
+
+  /// No description provided for @newProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'New Profile'**
+  String get newProfile;
+
+  /// No description provided for @updateSubscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Subscriptions'**
+  String get updateSubscriptions;
+
+  /// No description provided for @updating.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating...'**
+  String get updating;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @exportSubLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Export subscription link to clipboard'**
+  String get exportSubLink;
+
+  /// No description provided for @qrCodeSubLink.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code subscription link'**
+  String get qrCodeSubLink;
+
+  /// No description provided for @addConfigToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Add config to clipboard'**
+  String get addConfigToClipboard;
+
+  /// No description provided for @addNewProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new profile'**
+  String get addNewProfile;
+
+  /// No description provided for @deleteAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All'**
+  String get deleteAll;
+
+  /// No description provided for @deleteAllConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all configs?'**
+  String get deleteAllConfirm;
 }
 
 class _AppLocalizationsDelegate

@@ -169,4 +169,36 @@ class ConnectionConfigRepo extends ChangeNotifier {
       return null;
     }
   }
+
+  /// Remove all configs belonging to a specific profile
+  /// Returns the number of removed configs
+  int removeConfigsByProfileId(String profileId) {
+    final initialCount = _configs.length;
+    _configs.removeWhere((c) => c.profileId == profileId);
+    final removedCount = initialCount - _configs.length;
+
+    // Update active config if needed
+    if (activeConfig != null && activeConfig!.profileId == profileId) {
+      if (_configs.isNotEmpty) {
+        activeIndex = 0;
+        activeConfig = _configs[0];
+      } else {
+        activeIndex = -1;
+        activeConfig = null;
+      }
+    } else if (activeConfig != null) {
+      activeIndex = _configs.indexWhere((c) => c.id == activeConfig!.id);
+    }
+
+    if (removedCount > 0) {
+      notifyListeners();
+    }
+
+    return removedCount;
+  }
+
+  /// Get all configs belonging to a specific profile
+  List<ConnectionConfigModel> getConfigsByProfileId(String profileId) {
+    return _configs.where((c) => c.profileId == profileId).toList();
+  }
 }

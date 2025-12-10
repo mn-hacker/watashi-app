@@ -160,4 +160,72 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get connectionSuccess => 'Подключено успешно';
+
+  @override
+  String get profileSavedSuccess => 'Profile saved successfully';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully';
+
+  @override
+  String get addingProfile => 'Adding profile';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get copyLink => 'Copy Link';
+
+  @override
+  String get linkCopied => 'Link copied';
+
+  @override
+  String get deleteProfile => 'Delete';
+
+  @override
+  String get deleteProfileConfirm => 'Delete profile?';
+
+  @override
+  String deleteProfileMessage(String name) {
+    return 'Are you sure you want to delete $name?';
+  }
+
+  @override
+  String get newProfile => 'New Profile';
+
+  @override
+  String get updateSubscriptions => 'Update Subscriptions';
+
+  @override
+  String get updating => 'Updating...';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get exportSubLink => 'Export subscription link to clipboard';
+
+  @override
+  String get qrCodeSubLink => 'QR Code subscription link';
+
+  @override
+  String get addConfigToClipboard => 'Add config to clipboard';
+
+  @override
+  String get addNewProfile => 'Add new profile';
+
+  @override
+  String get deleteAll => 'Delete All';
+
+  @override
+  String get deleteAllConfirm => 'Are you sure you want to delete all configs?';
 }

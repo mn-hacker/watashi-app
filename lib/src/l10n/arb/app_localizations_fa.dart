@@ -160,4 +160,72 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get connectionSuccess => 'اتصال با موفقیت برقرار شد';
+
+  @override
+  String get profileSavedSuccess => 'پروفایل با موفقیت ذخیره شد';
+
+  @override
+  String get profileUpdatedSuccess => 'پروفایل با موفقیت بروزرسانی شد';
+
+  @override
+  String get addingProfile => 'در حال افزودن پروفایل';
+
+  @override
+  String get cancel => 'لغو';
+
+  @override
+  String get close => 'بستن';
+
+  @override
+  String get copyLink => 'کپی لینک';
+
+  @override
+  String get linkCopied => 'لینک کپی شد';
+
+  @override
+  String get deleteProfile => 'حذف';
+
+  @override
+  String get deleteProfileConfirm => 'حذف پروفایل؟';
+
+  @override
+  String deleteProfileMessage(String name) {
+    return 'آیا از حذف $name مطمئن هستید؟';
+  }
+
+  @override
+  String get newProfile => 'پروفایل جدید';
+
+  @override
+  String get updateSubscriptions => 'بروزرسانی اشتراک‌ها';
+
+  @override
+  String get updating => 'در حال بروزرسانی...';
+
+  @override
+  String get update => 'بروزرسانی';
+
+  @override
+  String get edit => 'ویرایش';
+
+  @override
+  String get share => 'اشتراک‌گذاری';
+
+  @override
+  String get exportSubLink => 'صادر کردن لینک اشتراک به کلیپ‌بورد';
+
+  @override
+  String get qrCodeSubLink => 'کد QR لینک اشتراک';
+
+  @override
+  String get addConfigToClipboard => 'افزودن پیکربندی به کلیپ‌بورد';
+
+  @override
+  String get addNewProfile => 'افزودن پروفایل جدید';
+
+  @override
+  String get deleteAll => 'حذف همه';
+
+  @override
+  String get deleteAllConfirm => 'آیا از حذف همه کانفیگ‌ها مطمئن هستید؟';
 }

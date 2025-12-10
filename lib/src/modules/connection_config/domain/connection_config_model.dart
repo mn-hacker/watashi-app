@@ -9,6 +9,7 @@ class ConnectionConfigModel {
     required this.configLink,
     required this.rawJsonConfig,
     this.ping,
+    this.profileId,
   }) : assert(
           rawJsonConfig != null || configLink != null,
           'At least one of rawJsonConfig or configLink must be provided',
@@ -26,6 +27,9 @@ class ConnectionConfigModel {
 
   /// Unique identifier for this config
   final String id;
+
+  /// Profile ID this config belongs to (null if manually added)
+  final String? profileId;
 
   /// For raw user-entered json
   final Map<String, dynamic>? rawJsonConfig;
@@ -176,11 +180,13 @@ class ConnectionConfigModel {
   factory ConnectionConfigModel.fromLink({
     required String configLink,
     String? id,
+    String? profileId,
   }) =>
       ConnectionConfigModel._(
         id: id ?? DateTime.now().millisecondsSinceEpoch.toString(),
         configLink: configLink,
         rawJsonConfig: null,
+        profileId: profileId,
       );
 
   /// Create from storage JSON (for loading saved configs)
@@ -193,6 +199,7 @@ class ConnectionConfigModel {
       configLink: configLink,
       rawJsonConfig: rawJsonConfig,
       ping: json['ping'] as int?,
+      profileId: json['profileId'] as String?,
     );
   }
 
@@ -203,6 +210,7 @@ class ConnectionConfigModel {
       'configLink': configLink,
       'rawJsonConfig': rawJsonConfig,
       'ping': ping,
+      'profileId': profileId,
     };
   }
 

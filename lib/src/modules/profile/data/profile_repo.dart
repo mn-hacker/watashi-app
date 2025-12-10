@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:watashi/src/modules/profile/domain/profile_entity.dart';
 import 'package:watashi/src/modules/profile/data/profile_parser.dart';
+import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
+import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
 
 final profileRepoProvider =
     ChangeNotifierProvider<ProfileRepo>((_) => ProfileRepo());
@@ -147,13 +149,58 @@ class ProfileRepo extends ChangeNotifier {
   }
 
   /// Update/refresh a profile by ID
-  Future<bool> updateProfile(String id) async {
+  /// Also refreshes configs (deletes old ones, imports new ones)
+  Future<bool> updateProfile(
+    String id, {
+    ConnectionConfigRepo? configRepo,
+    SharedPrefsRepo? sharedPrefsRepo,
+    dynamic subscriptionService,
+  }) async {
     final index = _profiles.indexWhere((p) => p.id == id);
     if (index == -1) return false;
 
-    final profile = _profiles[index];
-    final updated = await addProfile(profile.url);
-    return updated != null;
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final profile = _profiles[index];
+
+      // Step 1: Delete old configs for this profile
+      if (configRepo != null) {
+        final deletedCount = configRepo.removeConfigsByProfileId(id);
+        debugPrint(
+            '[ProfileRepo] Deleted $deletedCount old configs for profile: ${profile.name}');
+      }
+
+      // Step 2: Re-fetch and update profile info
+      final updated = await addProfile(profile.url);
+
+      // Step 3: Re-import configs if subscriptionService provided
+      if (subscriptionService != null && updated != null) {
+        try {
+          final result = await subscriptionService.importFromUrl(profile.url);
+          debugPrint(
+              '[ProfileRepo] Re-imported ${result.successfulConfigs} configs');
+
+          // Save config changes
+          if (sharedPrefsRepo != null && configRepo != null) {
+            await sharedPrefsRepo.saveAllConfigs(configRepo.configs);
+            await sharedPrefsRepo.saveActiveConfigIndex(configRepo.activeIndex);
+          }
+        } catch (e) {
+          debugPrint('[ProfileRepo] Failed to re-import configs: $e');
+        }
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      return updated != null;
+    } catch (e) {
+      debugPrint('[ProfileRepo] Error updating profile: $e');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   /// Set active profile by ID
@@ -168,7 +215,12 @@ class ProfileRepo extends ChangeNotifier {
   }
 
   /// Delete profile by ID
-  void deleteProfile(String id) {
+  /// If configRepo is provided, also deletes associated configs
+  Future<int> deleteProfile(
+    String id, {
+    ConnectionConfigRepo? configRepo,
+    SharedPrefsRepo? sharedPrefsRepo,
+  }) async {
     final wasActive = _profiles.any((p) => p.id == id && p.active);
     _profiles.removeWhere((p) => p.id == id);
 
@@ -177,14 +229,43 @@ class ProfileRepo extends ChangeNotifier {
       _profiles[0] = _profiles[0].copyWith(active: true);
     }
 
-    _saveProfiles();
+    await _saveProfiles();
+
+    // Delete associated configs if repo provided
+    int deletedConfigs = 0;
+    if (configRepo != null) {
+      deletedConfigs = configRepo.removeConfigsByProfileId(id);
+      debugPrint(
+          '[ProfileRepo] Deleted $deletedConfigs configs for profile $id');
+
+      // Save config changes
+      if (sharedPrefsRepo != null && deletedConfigs > 0) {
+        await sharedPrefsRepo.saveAllConfigs(configRepo.configs);
+        await sharedPrefsRepo.saveActiveConfigIndex(configRepo.activeIndex);
+      }
+    }
+
     notifyListeners();
+    return deletedConfigs;
   }
 
   /// Delete all profiles
-  void deleteAllProfiles() {
+  Future<void> deleteAllProfiles({
+    ConnectionConfigRepo? configRepo,
+    SharedPrefsRepo? sharedPrefsRepo,
+  }) async {
     _profiles.clear();
-    _saveProfiles();
+    await _saveProfiles();
+
+    // Delete all configs if repo provided
+    if (configRepo != null) {
+      configRepo.clearAllConfigs();
+      if (sharedPrefsRepo != null) {
+        await sharedPrefsRepo.saveAllConfigs([]);
+        await sharedPrefsRepo.saveActiveConfigIndex(-1);
+      }
+    }
+
     notifyListeners();
   }
 }

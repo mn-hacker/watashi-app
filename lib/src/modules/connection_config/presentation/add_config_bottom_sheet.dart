@@ -7,6 +7,7 @@ import 'package:watashi/src/modules/connection_config/presentation/add_connectio
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
 import 'package:watashi/src/modules/connection_config/presentation/qr_scanner_screen.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/widgets/app_toast.dart';
 
 /// Shows the add config bottom sheet with options
 Future<void> showAddConfigBottomSheet(BuildContext context) {
@@ -56,32 +57,53 @@ class _AddConfigBottomSheetState extends ConsumerState<AddConfigBottomSheet> {
 
   Widget _buildLoadingState(bool isDarkMode, dynamic l10n) {
     return Container(
-      padding: EdgeInsets.all(32.w),
+      padding: EdgeInsets.symmetric(horizontal: 64.w, vertical: 32.h),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 16.h),
-          CircularProgressIndicator(
-            color: AppColors.accent,
+          // Handle bar
+          Container(
+            width: 40.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: (isDarkMode
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary)
+                  .withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(2.r),
+            ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
           Text(
-            _loadingMessage.isNotEmpty ? _loadingMessage : 'Adding config...',
+            _loadingMessage.isNotEmpty
+                ? _loadingMessage
+                : 'در حال افزودن پروفایل',
             style: TextStyle(
               fontSize: 14.sp,
               color: isDarkMode
-                  ? AppColors.grey.shade400
-                  : AppColors.grey.shade600,
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textSecondary,
             ),
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
+          LinearProgressIndicator(
+            backgroundColor: Colors.transparent,
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent),
+          ),
+          SizedBox(height: 12.h),
           TextButton(
             onPressed: () {
               setState(() => _isLoading = false);
             },
-            child: Text('Cancel'),
+            child: Text(
+              'لغو',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.accent,
+              ),
+            ),
           ),
-          SizedBox(height: 16.h),
         ],
       ),
     );
@@ -185,9 +207,7 @@ class _AddConfigBottomSheetState extends ConsumerState<AddConfigBottomSheet> {
 
         if (mounted) {
           Navigator.of(context).pop();
-          scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text(l10n.configAddedSuccess)),
-          );
+          AppToast.showSuccess(context);
         }
       } catch (e) {
         if (mounted) {

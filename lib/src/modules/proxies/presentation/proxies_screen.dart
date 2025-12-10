@@ -5,6 +5,7 @@ import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/domain/connection_config_model.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
+import 'package:watashi/src/modules/core/data/core_repo.dart';
 import 'package:watashi/src/modules/proxies/presentation/config_editor_screen.dart';
 import 'package:watashi/src/modules/proxies/presentation/widgets/auto_select_item.dart';
 import 'package:watashi/src/modules/proxies/presentation/widgets/proxy_list_item.dart';
@@ -20,6 +21,7 @@ class ProxiesScreen extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final configRepo = ref.watch(connectionConfigRepoProvider);
     final configs = configRepo.configs;
+    final isConnected = ref.watch(isCoreRunningProvider).valueOrNull ?? false;
 
     return Scaffold(
       backgroundColor:
@@ -77,23 +79,43 @@ class ProxiesScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: _buildConfigList(context, ref, isDarkMode, configs, configRepo),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.greenGlow,
-              blurRadius: 16,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          backgroundColor: AppColors.accent,
-          elevation: 0,
-          onPressed: () => _refreshPing(ref),
-          child: Icon(Icons.bolt_rounded, color: AppColors.white, size: 26),
+      body: isConnected
+          ? _buildConfigList(context, ref, isDarkMode, configs, configRepo)
+          : _buildNotConnectedMessage(context, isDarkMode),
+      floatingActionButton: isConnected
+          ? Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.greenGlow,
+                    blurRadius: 16,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: FloatingActionButton(
+                backgroundColor: AppColors.accent,
+                elevation: 0,
+                onPressed: () => _refreshPing(ref),
+                child:
+                    Icon(Icons.bolt_rounded, color: AppColors.white, size: 26),
+              ),
+            )
+          : null,
+    );
+  }
+
+  /// Build "Service not running" message
+  Widget _buildNotConnectedMessage(BuildContext context, bool isDarkMode) {
+    return Center(
+      child: Text(
+        context.l10n.serviceNotRunning,
+        style: TextStyle(
+          color: isDarkMode
+              ? AppColors.darkTextSecondary
+              : AppColors.textSecondary,
+          fontSize: 16.sp,
         ),
       ),
     );

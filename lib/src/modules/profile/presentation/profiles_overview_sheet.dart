@@ -249,6 +249,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.white,
+        contentPadding: EdgeInsets.all(20.w),
         title: Text(
           profile.name,
           textAlign: TextAlign.center,
@@ -257,17 +258,29 @@ class ProfilesOverviewSheet extends ConsumerWidget {
             fontSize: 16.sp,
           ),
         ),
-        content: Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: QrImageView(
-            data: profile.url,
-            version: QrVersions.auto,
-            size: 200.w,
-            backgroundColor: Colors.white,
+        content: SizedBox(
+          width: 250.w,
+          height: 250.w,
+          child: Container(
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: QrImageView(
+              data: profile.url,
+              version: QrVersions.auto,
+              size: 220.w,
+              backgroundColor: Colors.white,
+              eyeStyle: const QrEyeStyle(
+                eyeShape: QrEyeShape.square,
+                color: Colors.black,
+              ),
+              dataModuleStyle: const QrDataModuleStyle(
+                dataModuleShape: QrDataModuleShape.square,
+                color: Colors.black,
+              ),
+            ),
           ),
         ),
         actions: [

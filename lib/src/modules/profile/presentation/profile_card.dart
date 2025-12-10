@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/profile/data/profile_repo.dart';
 import 'package:watashi/src/modules/profile/domain/profile_entity.dart';
 import 'package:watashi/src/modules/profile/presentation/profiles_overview_sheet.dart';
+import 'package:watashi/src/modules/subscription/data/subscription_service.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
+import 'package:watashi/src/shared/widgets/app_toast.dart';
 
 /// Card showing active profile with subscription info
 /// Similar to Hiddify's ProfileTile
@@ -127,8 +131,21 @@ class ProfileCard extends ConsumerWidget {
       child: InkWell(
         onTap: isLoading
             ? null
-            : () {
-                ref.read(profileRepoProvider).updateProfile(profile.id);
+            : () async {
+                final success =
+                    await ref.read(profileRepoProvider).updateProfile(
+                          profile.id,
+                          configRepo: ref.read(connectionConfigRepoProvider),
+                          sharedPrefsRepo: ref.read(sharedPrefsRepoProvider),
+                          subscriptionService:
+                              ref.read(subscriptionServiceProvider),
+                        );
+                if (context.mounted && success) {
+                  AppToast.showSuccess(
+                    context,
+                    message: 'پروفایل با موفقیت بروزرسانی شد',
+                  );
+                }
               },
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16.r),

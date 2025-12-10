@@ -359,9 +359,9 @@ class _ActionButtons extends ConsumerWidget {
         ),
         SizedBox(width: 8.w),
         ElevatedButton(
-          onPressed: () {
-            settingsController.updateSettings();
-            Navigator.of(context).pop();
+          onPressed: () async {
+            await settingsController.updateSettings();
+            if (context.mounted) Navigator.of(context).pop();
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.accent,

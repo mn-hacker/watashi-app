@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
+import 'package:watashi/src/shared/presentation/routing/app_router.dart';
 
 /// Full settings screen accessible from hamburger menu
 class SettingsScreen extends ConsumerWidget {
@@ -13,7 +15,11 @@ class SettingsScreen extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return PopScope(
-      canPop: true,
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        context.goNamed(mainScreenName);
+      },
       child: Scaffold(
         backgroundColor:
             isDarkMode ? AppColors.darkBackground : AppColors.white,
@@ -25,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
               Icons.arrow_back_rounded,
               color: isDarkMode ? AppColors.white : AppColors.textPrimary,
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.goNamed(mainScreenName),
           ),
           title: Text(
             context.l10n.settings,

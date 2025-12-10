@@ -49,5 +49,35 @@
   "logs": "گزارش‌ها",
   "about": "درباره",
   "mainSettings": "تنظیمات اصلی",
-  "connectionSuccess": "اتصال با موفقیت برقرار شد"
+  "connectionSuccess": "اتصال با موفقیت برقرار شد",
+  "profileSavedSuccess": "پروفایل با موفقیت ذخیره شد",
+  "profileUpdatedSuccess": "پروفایل با موفقیت بروزرسانی شد",
+  "addingProfile": "در حال افزودن پروفایل",
+  "cancel": "لغو",
+  "close": "بستن",
+  "copyLink": "کپی لینک",
+  "linkCopied": "لینک کپی شد",
+  "deleteProfile": "حذف",
+  "deleteProfileConfirm": "حذف پروفایل؟",
+  "deleteProfileMessage": "آیا از حذف {name} مطمئن هستید؟",
+  "@deleteProfileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newProfile": "پروفایل جدید",
+  "updateSubscriptions": "بروزرسانی اشتراک‌ها",
+  "updating": "در حال بروزرسانی...",
+  "update": "بروزرسانی",
+  "edit": "ویرایش",
+  "share": "اشتراک‌گذاری",
+  "exportSubLink": "صادر کردن لینک اشتراک به کلیپ‌بورد",
+  "qrCodeSubLink": "کد QR لینک اشتراک",
+  "addConfigToClipboard": "افزودن پیکربندی به کلیپ‌بورد",
+  "addNewProfile": "افزودن پروفایل جدید",
+  "deleteAll": "حذف همه",
+  "deleteAllConfirm": "آیا از حذف همه کانفیگ‌ها مطمئن هستید؟"
 }
+
