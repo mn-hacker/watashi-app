@@ -11,7 +11,9 @@ class VmessProtocolParser extends ProtocolBaseParser {
   @override
   VmessProtocolConfig parse(String url) {
     ProxyUrlParserLogger.debug('Parsing VMess URL: $url');
-    final uri = Uri.parse(url);
+    // Fix illegal characters in URL before parsing
+    final fixedUrl = ProtocolBaseParser.fixIllegalUrl(url);
+    final uri = Uri.parse(fixedUrl);
     final components = <String, dynamic>{};
 
     // Extract the part after the scheme
@@ -39,7 +41,8 @@ class VmessProtocolParser extends ProtocolBaseParser {
       } catch (e) {
         throw InvalidUrlFormatException(
           'Failed to decode base64 JSON: $e',
-          url, StackTrace.current
+          url,
+          StackTrace.current,
         );
       }
     } else {

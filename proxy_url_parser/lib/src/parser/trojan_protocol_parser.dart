@@ -8,7 +8,9 @@ class TrojanProtocolParser extends ProtocolBaseParser {
   @override
   TrojanProtocolConfig parse(String url) {
     ProxyUrlParserLogger.debug('Parsing Trojan URL: $url');
-    final uri = Uri.parse(url);
+    // Fix illegal characters in URL before parsing
+    final fixedUrl = ProtocolBaseParser.fixIllegalUrl(url);
+    final uri = Uri.parse(fixedUrl);
     final components = <String, dynamic>{};
 
     // Extract basic components
@@ -21,7 +23,8 @@ class TrojanProtocolParser extends ProtocolBaseParser {
     // Normalize 'peer' query parameter to 'sni' if sni is not explicitly set
     if (components.containsKey('peer') && !components.containsKey('sni')) {
       components['sni'] = components['peer'];
-    } if (components["sni"] == null) {
+    }
+    if (components["sni"] == null) {
       components['sni'] = '';
     }
 
@@ -32,7 +35,8 @@ class TrojanProtocolParser extends ProtocolBaseParser {
     }
 
     // Handle 'security' for 'reality'
-    if (components.containsKey('security') && components['security'] == 'reality') {
+    if (components.containsKey('security') &&
+        components['security'] == 'reality') {
       components['security'] = 'reality';
     }
 

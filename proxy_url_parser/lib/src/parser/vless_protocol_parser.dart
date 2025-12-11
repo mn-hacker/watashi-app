@@ -8,7 +8,10 @@ class VlessProtocolParser extends ProtocolBaseParser {
   @override
   VlessProtocolConfig parse(String url) {
     ProxyUrlParserLogger.debug('Parsing VLESS URL: $url');
-    final uri = Uri.parse(url);
+    // Fix illegal characters in URL before parsing
+    final fixedUrl = ProtocolBaseParser.fixIllegalUrl(url);
+    ProxyUrlParserLogger.debug('Fixed URL: $fixedUrl');
+    final uri = Uri.parse(fixedUrl);
     final components = <String, dynamic>{};
 
     // Extract basic components
@@ -17,8 +20,6 @@ class VlessProtocolParser extends ProtocolBaseParser {
     components['port'] = uri.port.toString();
     components.addAll(extractQueryParameters(uri));
     components['remark'] = extractFragment(uri);
-
-
 
     // Check if 'security' is empty or null and set to 'none'
     if (components['security']?.isEmpty ?? true) {
@@ -32,7 +33,8 @@ class VlessProtocolParser extends ProtocolBaseParser {
     }
 
     // Handle 'security' for 'reality'
-    if (components.containsKey('security') && components['security'] == 'reality') {
+    if (components.containsKey('security') &&
+        components['security'] == 'reality') {
       // Reality-specific fields might be present like pbk, sid, spx
       components['security'] = 'reality';
     }
@@ -44,7 +46,8 @@ class VlessProtocolParser extends ProtocolBaseParser {
 
     // Map 'type' to 'network' (standard for VLESS)
     if (components.containsKey('type')) {
-      components['type'] = components['type']; // Already mapped as 'network' in VlessConfig
+      components['type'] =
+          components['type']; // Already mapped as 'network' in VlessConfig
     }
 
     // Map fingerprint (fp) and other fields

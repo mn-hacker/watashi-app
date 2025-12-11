@@ -45,4 +45,14 @@ abstract class ProtocolBaseParser {
       return uri.fragment;
     }
   }
+
+  /// Fixes illegal characters in URLs that could cause parsing failures.
+  /// Based on MahsaNG/V2rayNG's Utils.fixIllegalUrl
+  static String fixIllegalUrl(String url) {
+    return url
+        .replaceAll(' ', '%20')
+        .replaceAll('|', '%7C')
+        .replaceAll('[', '%5B')
+        .replaceAll(']', '%5D');
+  }
 }

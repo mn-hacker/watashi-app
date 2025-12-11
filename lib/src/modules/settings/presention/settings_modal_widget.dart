@@ -184,23 +184,16 @@ class _CoreTypeSection extends ConsumerWidget {
         ),
         SizedBox(height: 12.h),
         RadioOption<CoreNames>(
+          title: 'SingBox',
+          groupValue: settings.coreType,
+          value: CoreNames.singbox,
+          onChanged: (value) => settingsController.updateCoreType(value!),
+        ),
+        RadioOption<CoreNames>(
           title: 'Xray',
           subtitle: '(Custom)',
           groupValue: settings.coreType,
           value: CoreNames.xray,
-          onChanged: (value) => settingsController.updateCoreType(value!),
-        ),
-        RadioOption<CoreNames>(
-          title: 'Clash Meta',
-          subtitle: '(Soon)',
-          groupValue: settings.coreType,
-          value: CoreNames.clashMeta,
-          enabled: false,
-        ),
-        RadioOption<CoreNames>(
-          title: 'SingBox',
-          groupValue: settings.coreType,
-          value: CoreNames.singbox,
           onChanged: (value) => settingsController.updateCoreType(value!),
         ),
         RadioOption<CoreNames>(
@@ -209,6 +202,13 @@ class _CoreTypeSection extends ConsumerWidget {
           groupValue: settings.coreType,
           value: CoreNames.outline,
           onChanged: (value) => settingsController.updateCoreType(value!),
+        ),
+        RadioOption<CoreNames>(
+          title: 'Clash Meta',
+          subtitle: '(Soon)',
+          groupValue: settings.coreType,
+          value: CoreNames.clashMeta,
+          enabled: false,
         ),
       ],
     );

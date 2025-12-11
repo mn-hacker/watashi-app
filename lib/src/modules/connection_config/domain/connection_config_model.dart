@@ -18,14 +18,17 @@ class ConnectionConfigModel {
     debugPrint(
         '[ConfigModel] Creating config: id=$id, hasLink=${configLink != null}, hasRaw=${rawJsonConfig != null}');
     if (configLink != null) {
+      debugPrint(
+          '[ConfigModel] Link preview: ${configLink!.substring(0, configLink!.length > 80 ? 80 : configLink!.length)}...');
       // Try to parse with proxy_url_parser, but don't fail if unsupported
       try {
         _parsedConfig = ProxyUrlParser.parse(configLink!);
         debugPrint(
-            '[ConfigModel] Successfully parsed link, protocol: ${_parsedConfig?.runtimeType}');
+            '[ConfigModel] Successfully parsed link, protocol: ${_parsedConfig?.runtimeType}, remark: ${_parsedConfig?.remark}');
       } catch (e) {
         // Unsupported protocol (hy2, tuic, wg, etc.) - store raw link only
         debugPrint('[ConfigModel] Parse failed for link: $e');
+        debugPrint('[ConfigModel] Link that failed: $configLink');
         _parsedConfig = null;
       }
     }

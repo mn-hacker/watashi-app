@@ -5,7 +5,7 @@ import 'package:watashi/src/modules/settings/domain/settings_model.dart';
 
 class SettingRepo {
   final SettingsModel defaultSettings = SettingsModel(
-    coreType: CoreNames.xray,
+    coreType: CoreNames.singbox,
     connectionLoadType: ConnectionLoadType.normal,
     connectionMode: ConnectionMode.vpn,
   );

@@ -3,8 +3,12 @@ enum ProxyProtocols {
   vmess,
   vless,
   shadowsocks,
-  trojan
-  // wireguard,
-  // socks,
-  // hysteria2,
+  trojan,
+  wireguard,
+  socks,
+  http,
+  hysteria2,
+  tuic,
+  naive,
+  shadowtls,
 }

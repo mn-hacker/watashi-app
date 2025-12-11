@@ -3,6 +3,13 @@ import 'package:proxy_url_parser/src/parser/shadowsocks_protocol_parser.dart';
 import 'package:proxy_url_parser/src/parser/trojan_protocol_parser.dart';
 import 'package:proxy_url_parser/src/parser/vless_protocol_parser.dart';
 import 'package:proxy_url_parser/src/parser/vmess_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/socks_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/http_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/wireguard_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/hysteria2_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/tuic_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/naive_protocol_parser.dart';
+import 'package:proxy_url_parser/src/parser/shadowtls_protocol_parser.dart';
 import 'package:proxy_url_parser/src/protocol_config_base.dart';
 import 'package:proxy_url_parser/src/proxy_protocols.dart';
 import 'package:proxy_url_parser/src/util/proxy_url_parser_exception.dart';
@@ -14,9 +21,13 @@ class ProtocolParserRegistry {
     ProxyProtocols.vless: VlessProtocolParser(),
     ProxyProtocols.shadowsocks: ShadowsocksProtocolParser(),
     ProxyProtocols.trojan: TrojanProtocolParser(),
-    // ProxyType.wireguard: WireguardParser(),
-    // ProxyType.socks: SocksParser(),
-    // ProxyType.hysteria2: Hysteria2Parser(),
+    ProxyProtocols.wireguard: WireguardProtocolParser(),
+    ProxyProtocols.socks: SocksProtocolParser(),
+    ProxyProtocols.http: HttpProtocolParser(),
+    ProxyProtocols.hysteria2: Hysteria2ProtocolParser(),
+    ProxyProtocols.tuic: TuicProtocolParser(),
+    ProxyProtocols.naive: NaiveProtocolParser(),
+    ProxyProtocols.shadowtls: ShadowTlsProtocolParser(),
   };
 
   /// Registers a new parser for a given proxy type.
@@ -30,7 +41,11 @@ class ProtocolParserRegistry {
   static ProtocolConfigBase parse(ProxyProtocols type, String url) {
     final parser = _parsers[type];
     if (parser == null) {
-      throw InvalidUrlFormatException('No parser registered for proxy type: $type', url, StackTrace.current);
+      throw InvalidUrlFormatException(
+        'No parser registered for proxy type: $type',
+        url,
+        StackTrace.current,
+      );
     }
     return parser.parse(url);
   }

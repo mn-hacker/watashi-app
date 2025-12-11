@@ -63,9 +63,19 @@ class ProxyUrlParser {
       'vless://': ProxyProtocols.vless,
       'ss://': ProxyProtocols.shadowsocks,
       'trojan://': ProxyProtocols.trojan,
-      // 'wg://': ProxyProtocols.wireguard,
-      // 'socks://': ProxyProtocols.socks,
-      // 'hysteria2://': ProxyProtocols.hysteria2,
+      'wireguard://': ProxyProtocols.wireguard,
+      'wg://': ProxyProtocols.wireguard,
+      'socks://': ProxyProtocols.socks,
+      'socks5://': ProxyProtocols.socks,
+      'http://': ProxyProtocols.http,
+      'hysteria2://': ProxyProtocols.hysteria2,
+      'hy2://': ProxyProtocols.hysteria2,
+      'tuic://': ProxyProtocols.tuic,
+      'naive+https://': ProxyProtocols.naive,
+      'naive+quic://': ProxyProtocols.naive,
+      'naive://': ProxyProtocols.naive,
+      'shadow-tls://': ProxyProtocols.shadowtls,
+      'shadowtls://': ProxyProtocols.shadowtls,
     };
 
     for (final prefix in prefixes.keys) {

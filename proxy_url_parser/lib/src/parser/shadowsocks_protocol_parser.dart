@@ -10,7 +10,9 @@ class ShadowsocksProtocolParser extends ProtocolBaseParser {
   @override
   ShadowsocksProtocolConfig parse(String url) {
     ProxyUrlParserLogger.debug('Parsing Shadowsocks URL: $url');
-    final uri = Uri.parse(url);
+    // Fix illegal characters in URL before parsing
+    final fixedUrl = ProtocolBaseParser.fixIllegalUrl(url);
+    final uri = Uri.parse(fixedUrl);
     final components = <String, dynamic>{};
 
     // Remove fragment part if exists and then split on @

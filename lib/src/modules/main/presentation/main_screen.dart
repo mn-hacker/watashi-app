@@ -99,6 +99,16 @@ class _MainScreenContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Wait for MainController to finish initialization (including loading profiles)
+    final mainState = ref.watch(mainControllerProvider);
+
+    // Show loading indicator while MainController is initializing
+    if (mainState.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: AppColors.accent),
+      );
+    }
+
     // Rebuilds when connection config changes
     ref.watch(connectionConfigControllerProvider);
     final profileRepo = ref.watch(profileRepoProvider);

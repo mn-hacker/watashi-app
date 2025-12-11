@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/src/l10n/arb/app_localizations.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/main/presentation/widgets/main_connect_button/main_connect_button_timer_controller.dart';
+import 'package:watashi/src/modules/main/presentation/widgets/main_connect_button/sleeping_cat.dart';
 import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/constants/app_icons.dart';
 import 'package:watashi/src/shared/constants/app_text_styles.dart';
@@ -237,22 +238,50 @@ class _MainConnectButtonState extends ConsumerState<MainConnectButton>
     final slideOffset = _calculateSlideOffset(slidableDistance);
     final l10n = context.l10n;
     final connectionTimerState = ref.watch(connectionTimerProvider);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      width: widget.width,
-      height: widget.height,
-      decoration: BoxDecoration(
-        color: _getBackgroundColor(),
-        borderRadius: BorderRadius.circular(_borderRadius),
-      ),
-      child: Stack(
-        children: [
-          if (widget.isConnected == false) _buildRightArrows(),
-          if (widget.isConnected && !_isLoading)
-            _buildConnectionInfo(l10n, connectionTimerState.activeTime),
-          _buildSlideButton(slideOffset),
-        ],
-      ),
+    // Theme-aware cat colors
+    final catColor = isDarkMode
+        ? const Color(0xFFF5F5F5) // White for dark theme
+        : const Color(0xFF2D2D2D); // Black for light theme
+    final catAccentColor = const Color(0xFFFFB6C1); // Pink
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        // Main button with green border
+        Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+            color: _getBackgroundColor(),
+            borderRadius: BorderRadius.circular(_borderRadius),
+            border: Border.all(
+              color: AppColors.green.withOpacity(0.6),
+              width: 1.5,
+            ),
+          ),
+          child: Stack(
+            children: [
+              if (widget.isConnected == false) _buildRightArrows(),
+              if (widget.isConnected && !_isLoading)
+                _buildConnectionInfo(l10n, connectionTimerState.activeTime),
+              _buildSlideButton(slideOffset),
+            ],
+          ),
+        ),
+        // Sleeping cat ON the sliding button (follows the button position)
+        Positioned(
+          top: -18,
+          left: slideOffset + (widget.height * 0.1),
+          child: SleepingCat(
+            width: 55,
+            height: 35,
+            catColor: catColor,
+            accentColor: catAccentColor,
+          ),
+        ),
+      ],
     );
   }
 

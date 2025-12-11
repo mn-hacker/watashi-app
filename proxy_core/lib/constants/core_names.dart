@@ -1,6 +1,6 @@
 enum CoreNames {
-  xray,
-  clashMeta,
   singbox,
-  outline;
+  xray,
+  outline,
+  clashMeta;
 }
