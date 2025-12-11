@@ -11,14 +11,24 @@ export 'package:proxy_url_parser/src/protocol_config_base.dart';
 class ProxyUrlParser {
   static ProtocolConfigBase _parseUrl(String proxyUrl) {
     final cleanedUrl = proxyUrl.trim();
+    ProxyUrlParserLogger.debug(
+      '_parseUrl called with URL length: ${cleanedUrl.length}',
+    );
+
     final type = _determineProxyType(cleanedUrl);
     ProxyUrlParserLogger.debug(
       'Parsing URL with proxy type: $type',
     ); // Debug log
 
     try {
-      return ProtocolParserRegistry.parse(type, cleanedUrl);
-    } catch (e) {
+      final result = ProtocolParserRegistry.parse(type, cleanedUrl);
+      ProxyUrlParserLogger.debug(
+        'Successfully parsed URL, result type: ${result.runtimeType}',
+      );
+      return result;
+    } catch (e, stack) {
+      ProxyUrlParserLogger.debug('Parse failed with error: $e');
+      ProxyUrlParserLogger.debug('Stack: $stack');
       throw InvalidUrlFormatException(
         'Failed to parse proxy URL: $e',
         cleanedUrl,

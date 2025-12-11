@@ -9,6 +9,7 @@ import 'package:watashi/src/modules/subscription/data/subscription_service.dart'
 import 'package:watashi/src/shared/constants/app_colors.dart';
 import 'package:watashi/src/shared/data/shared_prefs_repo.dart';
 import 'package:watashi/src/shared/widgets/app_toast.dart';
+import 'package:watashi/src/l10n/l10n.dart';
 
 /// Card showing active profile with subscription info
 /// Similar to Hiddify's ProfileTile
@@ -143,7 +144,7 @@ class ProfileCard extends ConsumerWidget {
                 if (context.mounted && success) {
                   AppToast.showSuccess(
                     context,
-                    message: 'پروفایل با موفقیت بروزرسانی شد',
+                    message: context.l10n.profileUpdatedSuccess,
                   );
                 }
               },
@@ -243,7 +244,7 @@ class _SubscriptionInfoRow extends StatelessWidget {
         ),
         // Days remaining
         Text(
-          _formatDaysRemaining(subInfo),
+          _formatDaysRemaining(context, subInfo),
           style: TextStyle(
             fontSize: 12.sp,
             color: subInfo.isExpired ? Colors.red : textColor,
@@ -264,13 +265,13 @@ class _SubscriptionInfoRow extends StatelessWidget {
     return '${consumedGB.toStringAsFixed(2)}GiB / ${totalGB.toStringAsFixed(0)}GiB';
   }
 
-  String _formatDaysRemaining(SubscriptionInfo info) {
+  String _formatDaysRemaining(BuildContext context, SubscriptionInfo info) {
     if (info.isExpired) {
-      return 'منقضی شده';
+      return context.l10n.expired;
     }
     if (info.isUnlimitedTime) {
-      return '∞ روز باقی مانده';
+      return context.l10n.unlimitedDays;
     }
-    return '${info.daysRemaining} روز باقی مانده';
+    return context.l10n.daysRemaining(info.daysRemaining.toString());
   }
 }

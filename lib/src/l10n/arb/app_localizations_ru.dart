@@ -90,10 +90,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get refreshPing => 'Обновить пинг';
 
   @override
-  String get editConfig => 'Редактировать';
+  String get editConfig => 'Редактировать конфигурацию';
 
   @override
-  String get deleteConfig => 'Удалить';
+  String get deleteConfig => 'Удалить конфигурацию';
 
   @override
   String get configRemark => 'Название';
@@ -108,10 +108,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get configUuid => 'UUID';
 
   @override
-  String get saveChanges => 'Сохранить';
+  String get saveChanges => 'Сохранить изменения';
 
   @override
-  String get customization => 'Настройки';
+  String get customization => 'Персонализация';
 
   @override
   String get theme => 'Тема';
@@ -162,70 +162,91 @@ class AppLocalizationsRu extends AppLocalizations {
   String get connectionSuccess => 'Подключено успешно';
 
   @override
-  String get profileSavedSuccess => 'Profile saved successfully';
+  String get profileSavedSuccess => 'Профиль успешно сохранён';
 
   @override
-  String get profileUpdatedSuccess => 'Profile updated successfully';
+  String get profileUpdatedSuccess => 'Профиль успешно обновлён';
 
   @override
-  String get addingProfile => 'Adding profile';
+  String get addingProfile => 'Добавление профиля';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Отмена';
 
   @override
-  String get close => 'Close';
+  String get close => 'Закрыть';
 
   @override
-  String get copyLink => 'Copy Link';
+  String get copyLink => 'Копировать ссылку';
 
   @override
-  String get linkCopied => 'Link copied';
+  String get linkCopied => 'Ссылка скопирована';
 
   @override
-  String get deleteProfile => 'Delete';
+  String get deleteProfile => 'Удалить';
 
   @override
-  String get deleteProfileConfirm => 'Delete profile?';
+  String get deleteProfileConfirm => 'Удалить профиль?';
 
   @override
   String deleteProfileMessage(String name) {
-    return 'Are you sure you want to delete $name?';
+    return 'Вы уверены, что хотите удалить $name?';
   }
 
   @override
-  String get newProfile => 'New Profile';
+  String get newProfile => 'Новый профиль';
 
   @override
-  String get updateSubscriptions => 'Update Subscriptions';
+  String get updateSubscriptions => 'Обновить подписки';
 
   @override
-  String get updating => 'Updating...';
+  String get updating => 'Обновление...';
 
   @override
-  String get update => 'Update';
+  String get update => 'Обновить';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Редактировать';
 
   @override
-  String get share => 'Share';
+  String get share => 'Поделиться';
 
   @override
-  String get exportSubLink => 'Export subscription link to clipboard';
+  String get exportSubLink => 'Экспортировать ссылку подписки';
 
   @override
-  String get qrCodeSubLink => 'QR Code subscription link';
+  String get qrCodeSubLink => 'QR-код ссылки подписки';
 
   @override
-  String get addConfigToClipboard => 'Add config to clipboard';
+  String get addConfigToClipboard => 'Добавить конфигурацию в буфер';
 
   @override
-  String get addNewProfile => 'Add new profile';
+  String get addNewProfile => 'Добавить новый профиль';
 
   @override
-  String get deleteAll => 'Delete All';
+  String get deleteAll => 'Удалить всё';
 
   @override
-  String get deleteAllConfirm => 'Are you sure you want to delete all configs?';
+  String get deleteAllConfirm =>
+      'Вы уверены, что хотите удалить все конфигурации?';
+
+  @override
+  String get sort => 'Сортировка';
+
+  @override
+  String daysRemaining(String days) {
+    return '$days дней осталось';
+  }
+
+  @override
+  String get unlimitedDays => '∞ дней осталось';
+
+  @override
+  String get expired => 'Истёк';
+
+  @override
+  String get startWithProfile => 'Начните с добавления профиля подписки';
+
+  @override
+  String get localConfigs => 'Локальные конфигурации';
 }

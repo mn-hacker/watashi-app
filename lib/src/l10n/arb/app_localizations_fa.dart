@@ -228,4 +228,24 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get deleteAllConfirm => 'آیا از حذف همه کانفیگ‌ها مطمئن هستید؟';
+
+  @override
+  String get sort => 'مرتب‌سازی';
+
+  @override
+  String daysRemaining(String days) {
+    return '$days روز باقی مانده';
+  }
+
+  @override
+  String get unlimitedDays => '∞ روز باقی مانده';
+
+  @override
+  String get expired => 'منقضی شده';
+
+  @override
+  String get startWithProfile => 'با افزودن یک پروفایل اشتراک شروع کنید';
+
+  @override
+  String get localConfigs => 'کانفیگ‌های محلی';
 }

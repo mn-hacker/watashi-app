@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
 import 'package:watashi/src/modules/profile/data/profile_repo.dart';
 import 'package:watashi/src/modules/profile/domain/profile_entity.dart';
@@ -81,7 +82,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.add_rounded,
-                        label: 'پروفایل جدید',
+                        label: context.l10n.newProfile,
                         isDarkMode: isDarkMode,
                         onTap: () {
                           Navigator.pop(context);
@@ -93,7 +94,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
                     Expanded(
                       child: _ActionButton(
                         icon: Icons.swap_vert_rounded,
-                        label: 'مرتب‌سازی',
+                        label: context.l10n.sort,
                         isDarkMode: isDarkMode,
                         onTap: () {
                           // TODO: Sort profiles
@@ -108,7 +109,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
                   width: double.infinity,
                   child: _ActionButton(
                     icon: Icons.refresh_rounded,
-                    label: 'بروزرسانی اشتراک‌ها',
+                    label: context.l10n.updateSubscriptions,
                     isDarkMode: isDarkMode,
                     onTap: () => _updateAllProfiles(context, ref),
                   ),
@@ -139,7 +140,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
               // بروزرسانی
               _MenuItemTile(
                 icon: Icons.refresh_rounded,
-                title: 'بروزرسانی',
+                title: context.l10n.update,
                 isDarkMode: isDarkMode,
                 onTap: () {
                   Navigator.pop(context);
@@ -149,28 +150,34 @@ class ProfilesOverviewSheet extends ConsumerWidget {
               // اشتراک‌گذاری (with submenu arrow)
               _MenuItemTile(
                 icon: Icons.share_rounded,
-                title: 'اشتراک‌گذاری',
+                title: context.l10n.share,
                 isDarkMode: isDarkMode,
                 hasSubmenu: true,
                 onTap: () {
+                  // Close menu first, then show share menu after a short delay
                   Navigator.pop(context);
-                  _showShareMenu(context, profile, isDarkMode);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    if (context.mounted) {
+                      _showShareMenu(context, profile, isDarkMode);
+                    }
+                  });
                 },
               ),
               // ویرایش
               _MenuItemTile(
                 icon: Icons.edit_rounded,
-                title: 'ویرایش',
+                title: context.l10n.edit,
                 isDarkMode: isDarkMode,
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Edit profile
+                  // Show profile name edit dialog
+                  _showEditProfileDialog(context, ref, profile, isDarkMode);
                 },
               ),
               // حذف
               _MenuItemTile(
                 icon: Icons.delete_rounded,
-                title: 'حذف',
+                title: context.l10n.deleteProfile,
                 isDarkMode: isDarkMode,
                 isDestructive: true,
                 onTap: () {
@@ -310,12 +317,12 @@ class ProfilesOverviewSheet extends ConsumerWidget {
       builder: (context) => AlertDialog(
         backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.white,
         title: Text(
-          'حذف پروفایل؟',
+          context.l10n.deleteProfileConfirm,
           style: TextStyle(
               color: isDarkMode ? AppColors.white : AppColors.textPrimary),
         ),
         content: Text(
-          'آیا از حذف ${profile.name} مطمئن هستید؟',
+          context.l10n.deleteProfileMessage(profile.name),
           style: TextStyle(
               color: isDarkMode
                   ? AppColors.darkTextSecondary
@@ -324,14 +331,76 @@ class ProfilesOverviewSheet extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('انصراف'),
+            child: Text(context.l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               ref.read(profileRepoProvider).deleteProfile(profile.id);
             },
-            child: Text('حذف', style: TextStyle(color: Colors.red.shade400)),
+            child: Text(context.l10n.deleteProfile,
+                style: TextStyle(color: Colors.red.shade400)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditProfileDialog(BuildContext context, WidgetRef ref,
+      ProfileEntity profile, bool isDarkMode) {
+    final controller = TextEditingController(text: profile.name);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: isDarkMode ? AppColors.darkCard : AppColors.white,
+        title: Text(
+          context.l10n.edit,
+          style: TextStyle(
+              color: isDarkMode ? AppColors.white : AppColors.textPrimary),
+        ),
+        content: TextField(
+          controller: controller,
+          style: TextStyle(
+              color: isDarkMode ? AppColors.white : AppColors.textPrimary),
+          decoration: InputDecoration(
+            hintText: 'Profile name',
+            hintStyle: TextStyle(
+                color: isDarkMode
+                    ? AppColors.darkTextSecondary
+                    : AppColors.textSecondary),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: isDarkMode
+                      ? AppColors.darkTextSecondary
+                      : AppColors.textSecondary),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: AppColors.accent),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(context.l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () async {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty && newName != profile.name) {
+                await ref
+                    .read(profileRepoProvider)
+                    .renameProfile(profile.id, newName);
+              }
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext);
+              }
+            },
+            child: Text(context.l10n.confirm,
+                style: TextStyle(color: AppColors.accent)),
           ),
         ],
       ),
@@ -344,7 +413,7 @@ class ProfilesOverviewSheet extends ConsumerWidget {
       profileRepo.updateProfile(profile.id);
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('در حال بروزرسانی...')),
+      SnackBar(content: Text(context.l10n.updating)),
     );
   }
 }
@@ -419,7 +488,7 @@ class _ProfileListItem extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            _formatDays(profile.subInfo!),
+                            _formatDays(context, profile.subInfo!),
                             style: TextStyle(
                               fontSize: 11.sp,
                               color: profile.subInfo!.isExpired
@@ -459,10 +528,10 @@ class _ProfileListItem extends StatelessWidget {
     return '${consumedGB.toStringAsFixed(2)}GiB / ${totalGB.toStringAsFixed(0)}GiB';
   }
 
-  String _formatDays(SubscriptionInfo info) {
-    if (info.isExpired) return 'منقضی شده';
-    if (info.isUnlimitedTime) return '∞ روز باقی مانده';
-    return '${info.daysRemaining} روز باقی مانده';
+  String _formatDays(BuildContext context, SubscriptionInfo info) {
+    if (info.isExpired) return context.l10n.expired;
+    if (info.isUnlimitedTime) return context.l10n.unlimitedDays;
+    return context.l10n.daysRemaining(info.daysRemaining.toString());
   }
 }
 

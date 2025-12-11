@@ -78,5 +78,18 @@
   "addConfigToClipboard": "Add config to clipboard",
   "addNewProfile": "Add new profile",
   "deleteAll": "Delete All",
-  "deleteAllConfirm": "Are you sure you want to delete all configs?"
+  "deleteAllConfirm": "Are you sure you want to delete all configs?",
+  "sort": "Sort",
+  "daysRemaining": "{days} days remaining",
+  "@daysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "unlimitedDays": "∞ days remaining",
+  "expired": "Expired",
+  "startWithProfile": "Start by adding a subscription profile",
+  "localConfigs": "Local Configs"
 }

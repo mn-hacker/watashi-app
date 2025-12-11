@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:proxy_core/constants/core_names.dart';
 import 'package:proxy_url_parser/proxy_url_parser.dart';
 
@@ -14,12 +15,17 @@ class ConnectionConfigModel {
           rawJsonConfig != null || configLink != null,
           'At least one of rawJsonConfig or configLink must be provided',
         ) {
+    debugPrint(
+        '[ConfigModel] Creating config: id=$id, hasLink=${configLink != null}, hasRaw=${rawJsonConfig != null}');
     if (configLink != null) {
       // Try to parse with proxy_url_parser, but don't fail if unsupported
       try {
         _parsedConfig = ProxyUrlParser.parse(configLink!);
+        debugPrint(
+            '[ConfigModel] Successfully parsed link, protocol: ${_parsedConfig?.runtimeType}');
       } catch (e) {
         // Unsupported protocol (hy2, tuic, wg, etc.) - store raw link only
+        debugPrint('[ConfigModel] Parse failed for link: $e');
         _parsedConfig = null;
       }
     }
@@ -146,8 +152,12 @@ class ConnectionConfigModel {
 
   /// Returns full config for the given core to start the core.
   String getFullJsonConfig(CoreNames core) {
+    debugPrint(
+        '[ConfigModel] getFullJsonConfig called: id=$id, hasParsed=${_parsedConfig != null}, hasRaw=${rawJsonConfig != null}, configLink=${configLink?.substring(0, configLink!.length > 50 ? 50 : configLink!.length)}...');
+
     final Map<String, dynamic> config;
     if (_parsedConfig != null) {
+      debugPrint('[ConfigModel] Using _parsedConfig path');
       switch (core) {
         case CoreNames.xray:
         case CoreNames.clashMeta:
@@ -159,14 +169,19 @@ class ConnectionConfigModel {
           config = _parsedConfig!.toOutlineJson();
       }
     } else if (rawJsonConfig != null) {
+      debugPrint('[ConfigModel] Using rawJsonConfig path');
       config = rawJsonConfig!;
     } else {
       // For unsupported protocols, return empty config
       // The raw link is still stored and can be used by external cores
+      debugPrint(
+          '[ConfigModel] ERROR: No parsed or raw config! Returning error JSON');
       config = {'error': 'Unsupported protocol', 'link': configLink};
     }
 
-    return jsonEncode(config);
+    final result = jsonEncode(config);
+    debugPrint('[ConfigModel] Config JSON length: ${result.length}');
+    return result;
   }
 
   factory ConnectionConfigModel.fromJson(Map<String, dynamic> json) {

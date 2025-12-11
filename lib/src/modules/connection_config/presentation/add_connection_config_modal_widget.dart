@@ -10,7 +10,11 @@ import 'package:watashi/src/shared/constants/app_text_styles.dart'; // Import th
 import 'package:watashi/src/shared/presentation/widgets/custom_dialog.dart';
 
 /// Shows the add subscription modal dialog with animation
-Future<void> showConnectionConfigModal(BuildContext context) {
+Future<void> showConnectionConfigModal(BuildContext context, {WidgetRef? ref}) {
+  // Clear any previous input when opening the dialog
+  if (ref != null) {
+    ref.read(connectionConfigControllerProvider.notifier).clearInput();
+  }
   return showDialog<void>(
     context: context,
     builder: (context) => DialogScaffold(

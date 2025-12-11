@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:watashi/gen/assets.gen.dart';
 import 'package:watashi/src/l10n/l10n.dart';
 import 'package:watashi/src/modules/connection_config/presentation/add_config_bottom_sheet.dart';
-import 'package:watashi/src/modules/connection_config/data/connection_config_repo.dart';
 import 'package:watashi/src/modules/connection_config/presentation/widgets/connection_config_input_controller.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_controller.dart';
 import 'package:watashi/src/modules/connection_meta/presentation/connection_meta_widget.dart';
@@ -29,31 +28,16 @@ class MainScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Color filter for dark mode only
-    ColorFilter? backgroundColorFilter;
-    double backgroundOpacity;
-
-    if (isDarkMode) {
-      // Dark mode - light/white stripes
-      backgroundColorFilter = const ColorFilter.mode(
-        Colors.white70,
-        BlendMode.srcIn,
-      );
-      backgroundOpacity = 0.2;
-    } else {
-      // Light mode - default grey stripes
-      backgroundColorFilter = null;
-      backgroundOpacity = 1.0;
-    }
-
     return DecoratedBox(
       decoration: BoxDecoration(
         color: isDarkMode ? AppColors.darkBackground : AppColors.white,
-        image: DecorationImage(
-          image: Assets.images.bg.image(fit: BoxFit.cover).image,
-          colorFilter: backgroundColorFilter,
-          opacity: backgroundOpacity,
-        ),
+        // Only show background pattern in light mode
+        image: isDarkMode
+            ? null
+            : DecorationImage(
+                image: Assets.images.bg.image(fit: BoxFit.cover).image,
+                opacity: 1.0,
+              ),
       ),
       child: Scaffold(
         key: _scaffoldKey,
@@ -117,12 +101,12 @@ class _MainScreenContent extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Rebuilds when connection config changes
     ref.watch(connectionConfigControllerProvider);
-    final configRepo = ref.watch(connectionConfigRepoProvider);
     final profileRepo = ref.watch(profileRepoProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Show empty state when no configs and no profiles
-    if (configRepo.configs.isEmpty && !profileRepo.hasProfiles) {
+    // Show empty state when no profiles exist
+    // (configs without profiles are orphaned and should prompt adding a profile)
+    if (!profileRepo.hasProfiles) {
       return _buildEmptyState(context, isDarkMode);
     }
 
@@ -149,7 +133,7 @@ class _MainScreenContent extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'با افزودن یک پروفایل اشتراک شروع کنید',
+            context.l10n.startWithProfile,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16.sp,
@@ -162,7 +146,7 @@ class _MainScreenContent extends ConsumerWidget {
           OutlinedButton.icon(
             onPressed: () => showAddConfigBottomSheet(context),
             icon: const Icon(Icons.add_rounded),
-            label: const Text('افزودن پروفایل جدید'),
+            label: Text(context.l10n.addNewProfile),
             style: OutlinedButton.styleFrom(
               foregroundColor:
                   isDarkMode ? AppColors.white : AppColors.textPrimary,

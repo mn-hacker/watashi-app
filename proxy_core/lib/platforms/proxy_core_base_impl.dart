@@ -99,18 +99,28 @@ class ProxyCoreBaseImpl
 
       final finalConfig = await prepareConfigForVpnIfNeeded(config);
 
-      // Route SingBox through its dedicated channel
-      if (finalConfig.core == CoreNames.singbox) {
-        await _startSingBox(finalConfig);
-      } else {
-        // Use gRPC for Xray and other cores
-        await _grpcClient.startCore(finalConfig.toGrpcModel());
+      try {
+        // Route SingBox through its dedicated channel
+        if (finalConfig.core == CoreNames.singbox) {
+          await _startSingBox(finalConfig);
+        } else {
+          // Use gRPC for Xray and other cores
+          await _grpcClient.startCore(finalConfig.toGrpcModel());
+        }
+
+        await _onCoreStateChanged?.call(await isRunning);
+
+        // Start VPN status polling if in VPN mode
+        if (finalConfig.vpnMode) _startVpnStatusPolling();
+      } catch (e) {
+        // CRITICAL: If core start fails, make sure to stop VPN to prevent
+        // zombie VPN state where Android shows VPN connected but no traffic routes
+        if (finalConfig.vpnMode) {
+          await stopVPN();
+        }
+        await _onCoreStateChanged?.call(false);
+        rethrow;
       }
-
-      await _onCoreStateChanged?.call(await isRunning);
-
-      // Start VPN status polling if in VPN mode
-      if (finalConfig.vpnMode) _startVpnStatusPolling();
     });
   }
 

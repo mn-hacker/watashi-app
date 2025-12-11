@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proxy_core/proxy_core.dart';
+import 'package:proxy_url_parser/src/util/proxy_url_parser_logger.dart';
 import 'package:watashi/src/shared/constants/app_theme.dart';
 import 'package:watashi/src/shared/errors/error_logger.dart';
 import 'package:watashi/src/shared/errors/error_observer.dart';
@@ -17,6 +18,9 @@ void bootstrap({
 }) async {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    // Enable debug logging for proxy URL parser
+    ProxyUrlParserLogger.enableDebugMode();
 
     ProxyCore.ins
         .setIosTunnelInfo("Watashi VPN", "com.watashi.watashivpn.PacketTunnel");

@@ -26,14 +26,14 @@
   "connectToViewProxies": "Подключитесь для просмотра прокси",
   "sortByPing": "Сортировать по пингу",
   "refreshPing": "Обновить пинг",
-  "editConfig": "Редактировать",
-  "deleteConfig": "Удалить",
+  "editConfig": "Редактировать конфигурацию",
+  "deleteConfig": "Удалить конфигурацию",
   "configRemark": "Название",
   "configAddress": "Адрес",
   "configPort": "Порт",
   "configUuid": "UUID",
-  "saveChanges": "Сохранить",
-  "customization": "Настройки",
+  "saveChanges": "Сохранить изменения",
+  "customization": "Персонализация",
   "theme": "Тема",
   "language": "Язык",
   "themeLight": "Светлая",
@@ -49,5 +49,47 @@
   "logs": "Логи",
   "about": "О программе",
   "mainSettings": "Основные настройки",
-  "connectionSuccess": "Подключено успешно"
+  "connectionSuccess": "Подключено успешно",
+  "profileSavedSuccess": "Профиль успешно сохранён",
+  "profileUpdatedSuccess": "Профиль успешно обновлён",
+  "addingProfile": "Добавление профиля",
+  "cancel": "Отмена",
+  "close": "Закрыть",
+  "copyLink": "Копировать ссылку",
+  "linkCopied": "Ссылка скопирована",
+  "deleteProfile": "Удалить",
+  "deleteProfileConfirm": "Удалить профиль?",
+  "deleteProfileMessage": "Вы уверены, что хотите удалить {name}?",
+  "@deleteProfileMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newProfile": "Новый профиль",
+  "updateSubscriptions": "Обновить подписки",
+  "updating": "Обновление...",
+  "update": "Обновить",
+  "edit": "Редактировать",
+  "share": "Поделиться",
+  "exportSubLink": "Экспортировать ссылку подписки",
+  "qrCodeSubLink": "QR-код ссылки подписки",
+  "addConfigToClipboard": "Добавить конфигурацию в буфер",
+  "addNewProfile": "Добавить новый профиль",
+  "deleteAll": "Удалить всё",
+  "deleteAllConfirm": "Вы уверены, что хотите удалить все конфигурации?",
+  "sort": "Сортировка",
+  "daysRemaining": "{days} дней осталось",
+  "@daysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "unlimitedDays": "∞ дней осталось",
+  "expired": "Истёк",
+  "startWithProfile": "Начните с добавления профиля подписки",
+  "localConfigs": "Локальные конфигурации"
 }

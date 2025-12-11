@@ -228,4 +228,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllConfirm => 'Are you sure you want to delete all configs?';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
+  String daysRemaining(String days) {
+    return '$days days remaining';
+  }
+
+  @override
+  String get unlimitedDays => '∞ days remaining';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get startWithProfile => 'Start by adding a subscription profile';
+
+  @override
+  String get localConfigs => 'Local Configs';
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:watashi/src/modules/subscription/data/subscription_fetcher.dart';
@@ -138,13 +140,20 @@ class SubscriptionService {
         );
       }
 
-      // Build and add configs
+      // Create or get local profile for these configs
+      final profileRepo = _ref.read(profileRepoProvider);
+      final firstConfigName = parsedConfigs.first.name;
+      final profileId = await profileRepo.addLocalProfile(
+        configName: firstConfigName,
+      );
+
+      // Build and add configs with profileId
       int successCount = 0;
       final configRepo = _ref.read(connectionConfigRepoProvider);
 
       for (final parsed in parsedConfigs) {
         try {
-          final config = _buildConfig(parsed);
+          final config = _buildConfig(parsed, profileId: profileId);
           configRepo.addConfig(config);
           successCount++;
         } catch (e) {
@@ -180,7 +189,13 @@ class SubscriptionService {
       final parsed = SubscriptionParser.parseConfigs(configLink);
       if (parsed.isEmpty) return false;
 
-      final config = _buildConfig(parsed.first);
+      // Create or get local profile
+      final profileRepo = _ref.read(profileRepoProvider);
+      final profileId = await profileRepo.addLocalProfile(
+        configName: parsed.first.name,
+      );
+
+      final config = _buildConfig(parsed.first, profileId: profileId);
       final configRepo = _ref.read(connectionConfigRepoProvider);
       configRepo.addConfig(config);
 
@@ -210,13 +225,26 @@ class SubscriptionService {
 
   /// Build ConnectionConfigModel from ParsedConfig
   ConnectionConfigModel _buildConfig(ParsedConfig parsed, {String? profileId}) {
+    debugPrint(
+        '[SubscriptionService] Building config: protocol=${parsed.protocol}, link=${parsed.rawLink.substring(0, parsed.rawLink.length > 50 ? 50 : parsed.rawLink.length)}...');
+
     if (parsed.protocol == 'json') {
-      return ConnectionConfigModel.fromJson(
-        Map<String, dynamic>.from(
-          const {},
-        ),
-      );
+      // For JSON protocol, the rawLink contains the full JSON string
+      try {
+        final jsonContent = jsonDecode(parsed.rawLink) as Map<String, dynamic>;
+        debugPrint('[SubscriptionService] Parsed JSON config successfully');
+        return ConnectionConfigModel.fromJson(jsonContent);
+      } catch (e) {
+        debugPrint('[SubscriptionService] Failed to parse JSON config: $e');
+        // Fallback: treat as link
+        return ConnectionConfigModel.fromLink(
+          configLink: parsed.rawLink,
+          profileId: profileId,
+        );
+      }
     }
+
+    debugPrint('[SubscriptionService] Creating config from link');
     return ConnectionConfigModel.fromLink(
       configLink: parsed.rawLink,
       profileId: profileId,

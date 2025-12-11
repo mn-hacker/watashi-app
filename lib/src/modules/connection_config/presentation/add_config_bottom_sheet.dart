@@ -229,7 +229,7 @@ class _AddConfigBottomSheetState extends ConsumerState<AddConfigBottomSheet> {
 
   void _onManualAdd(BuildContext context) {
     Navigator.of(context).pop();
-    showConnectionConfigModal(context);
+    showConnectionConfigModal(context, ref: ref);
   }
 }
 

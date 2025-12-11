@@ -78,6 +78,18 @@
   "addConfigToClipboard": "افزودن پیکربندی به کلیپ‌بورد",
   "addNewProfile": "افزودن پروفایل جدید",
   "deleteAll": "حذف همه",
-  "deleteAllConfirm": "آیا از حذف همه کانفیگ‌ها مطمئن هستید؟"
+  "deleteAllConfirm": "آیا از حذف همه کانفیگ‌ها مطمئن هستید؟",
+  "sort": "مرتب‌سازی",
+  "daysRemaining": "{days} روز باقی مانده",
+  "@daysRemaining": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "unlimitedDays": "∞ روز باقی مانده",
+  "expired": "منقضی شده",
+  "startWithProfile": "با افزودن یک پروفایل اشتراک شروع کنید",
+  "localConfigs": "کانفیگ‌های محلی"
 }
-

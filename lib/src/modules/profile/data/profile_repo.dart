@@ -148,6 +148,34 @@ class ProfileRepo extends ChangeNotifier {
     }
   }
 
+  /// Add a local profile for manually added configs (not from subscription URL)
+  /// Returns the profile ID, or existing local profile ID if one exists
+  Future<String> addLocalProfile({String? configName}) async {
+    // Check if a local profile already exists
+    final existingLocal = _profiles.where((p) => p.url == 'local://').toList();
+    if (existingLocal.isNotEmpty) {
+      // Make sure it's active if no other is active
+      if (!_profiles.any((p) => p.active)) {
+        setActiveProfile(existingLocal.first.id);
+      }
+      return existingLocal.first.id;
+    }
+
+    // Create new local profile
+    final profile = ProfileEntity(
+      name: configName ?? 'Local Configs',
+      url: 'local://',
+      active: _profiles.isEmpty, // Make active if first profile
+    );
+
+    _profiles.add(profile);
+    await _saveProfiles();
+    notifyListeners();
+
+    debugPrint('[ProfileRepo] Added local profile: ${profile.id}');
+    return profile.id;
+  }
+
   /// Update/refresh a profile by ID
   /// Also refreshes configs (deletes old ones, imports new ones)
   Future<bool> updateProfile(
@@ -247,6 +275,19 @@ class ProfileRepo extends ChangeNotifier {
 
     notifyListeners();
     return deletedConfigs;
+  }
+
+  /// Rename a profile by ID
+  Future<bool> renameProfile(String id, String newName) async {
+    final index = _profiles.indexWhere((p) => p.id == id);
+    if (index == -1) return false;
+
+    _profiles[index] = _profiles[index].copyWith(name: newName);
+    await _saveProfiles();
+    notifyListeners();
+
+    debugPrint('[ProfileRepo] Renamed profile $id to "$newName"');
+    return true;
   }
 
   /// Delete all profiles

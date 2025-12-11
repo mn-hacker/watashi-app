@@ -531,6 +531,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete all configs?'**
   String get deleteAllConfirm;
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
+  /// No description provided for @daysRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{days} days remaining'**
+  String daysRemaining(String days);
+
+  /// No description provided for @unlimitedDays.
+  ///
+  /// In en, this message translates to:
+  /// **'∞ days remaining'**
+  String get unlimitedDays;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @startWithProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Start by adding a subscription profile'**
+  String get startWithProfile;
+
+  /// No description provided for @localConfigs.
+  ///
+  /// In en, this message translates to:
+  /// **'Local Configs'**
+  String get localConfigs;
 }
 
 class _AppLocalizationsDelegate
